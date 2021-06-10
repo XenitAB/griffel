@@ -12,6 +12,9 @@ import (
 
 func patchTemplating(templating sdk.Templating, tplVars []sdk.TemplateVar) (sdk.Templating, error) {
 	for i, template := range templating.List {
+		if template.Type != "query" {
+			continue
+		}
 		expr, err := appendVariables(template.Query, tplVars)
 		if err != nil {
 			return sdk.Templating{}, err
@@ -111,6 +114,9 @@ func getCustomTargets(customPanel *sdk.CustomPanel) (*[]sdk.Target, error) {
 }
 
 func appendVariables(exprStr string, tplVars []sdk.TemplateVar) (string, error) {
+	if exprStr == "" {
+		return "", errors.New("expression string cannot be empty")
+	}
 	expr, err := metricsql.Parse(exprStr)
 	if err != nil {
 		return "", err

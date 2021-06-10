@@ -11,6 +11,12 @@ func TestPatchTemplating(t *testing.T) {
 	templating := sdk.Templating{
 		List: []sdk.TemplateVar{
 			{
+				Type:  "datasource",
+				Name:  "DS_PROMETHEUS",
+				Label: "Datasource",
+			},
+			{
+				Type:  "query",
 				Name:  "foo",
 				Label: "Foo",
 				Query: "query_1",
@@ -26,11 +32,13 @@ func TestPatchTemplating(t *testing.T) {
 	}
 	newTemplating, err := patchTemplating(templating, tplVars)
 	require.NoError(t, err)
-	require.Len(t, newTemplating.List, 2)
+	require.Len(t, newTemplating.List, 3)
 	require.Equal(t, "bar", newTemplating.List[0].Name)
 	require.Equal(t, "query_2", newTemplating.List[0].Query)
-	require.Equal(t, "foo", newTemplating.List[1].Name)
-	require.Equal(t, "query_1{bar=~\"${bar}\"}", newTemplating.List[1].Query)
+	require.Equal(t, "DS_PROMETHEUS", newTemplating.List[1].Name)
+	require.Equal(t, "", newTemplating.List[1].Query)
+	require.Equal(t, "foo", newTemplating.List[2].Name)
+	require.Equal(t, "query_1{bar=~\"${bar}\"}", newTemplating.List[2].Query)
 }
 
 func TestPatchPanel(t *testing.T) {
