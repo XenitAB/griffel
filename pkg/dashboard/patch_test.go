@@ -30,7 +30,7 @@ func TestPatchTemplating(t *testing.T) {
 			Query: "query_2",
 		},
 	}
-	newTemplating, err := patchTemplating(templating, tplVars)
+	newTemplating, err := patchTemplating(templating, tplVars, nil)
 	require.NoError(t, err)
 	require.Len(t, newTemplating.List, 3)
 	require.Equal(t, "bar", newTemplating.List[0].Name)

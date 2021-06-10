@@ -10,18 +10,30 @@ import (
 	"github.com/grafana-tools/sdk"
 )
 
-func patchTemplating(templating sdk.Templating, tplVars []sdk.TemplateVar) (sdk.Templating, error) {
-	for i, template := range templating.List {
+func patchTemplating(templating sdk.Templating, tplVars []sdk.TemplateVar, datasource *sdk.TemplateVar) (sdk.Templating, error) {
+	newList := []sdk.TemplateVar{}
+	if datasource != nil {
+		newList = append(newList, *datasource)
+	}
+	newList = append(newList, tplVars...)
+
+	for _, template := range templating.List {
+		// Remove datasource if datasource override is set
+		if template.Type == "datasource" && datasource != nil {
+			continue
+		}
 		if template.Type != "query" {
+			newList = append(newList, template)
 			continue
 		}
 		expr, err := appendVariables(template.Query, tplVars)
 		if err != nil {
 			return sdk.Templating{}, err
 		}
-		templating.List[i].Query = expr
+		template.Query = expr
+		newList = append(newList, template)
 	}
-	templating.List = append(tplVars, templating.List...)
+	templating.List = newList
 	return templating, nil
 }
 

@@ -13,12 +13,21 @@ type Config struct {
 }
 
 type DashboardPatch struct {
-	Variables []DashboardVariable `yaml:"variables"`
+	Variables  []DashboardVariable  `yaml:"variables"`
+	Datasource *DashboardDatasource `yaml:"datasource"`
+}
+
+type DashboardDatasource struct {
+	Name  string `yaml:"name"`
+	Label string `yaml:"label"`
+	Regex string `yaml:"regex"`
+	Hide  bool   `yaml:"hide"`
 }
 
 type DashboardVariable struct {
 	Name  string `yaml:"name"`
 	Label string `yaml:"label"`
+	Query string `yaml:"query"`
 }
 
 type Dashboard struct {
