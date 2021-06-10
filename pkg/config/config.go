@@ -49,8 +49,8 @@ const (
 )
 
 type DashboardDestination struct {
-	Format OutputFormat `yaml:"format"`
-	Path   string       `yaml:"path"`
+	Format    OutputFormat `yaml:"format"`
+	Directory string       `yaml:"directory"`
 }
 
 func ParseConfig(path string) (*Config, error) {

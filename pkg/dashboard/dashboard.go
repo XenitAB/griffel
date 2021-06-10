@@ -35,7 +35,7 @@ func Patch(fs afero.Fs, cfg *config.Config) error {
 		}
 		board.Panels = panels
 
-		err = writeDashboard(fs, dash.Destination.Path, dash.Destination.Format, dash.Name, board)
+		err = writeDashboard(fs, dash.Destination.Directory, dash.Destination.Format, dash.Name, board)
 		if err != nil {
 			return err
 		}

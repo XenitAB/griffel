@@ -2,8 +2,8 @@ package dashboard
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
+	"path/filepath"
 
 	"github.com/grafana-tools/sdk"
 	grafanav1alpha1 "github.com/integr8ly/grafana-operator/v3/pkg/apis/integreatly/v1alpha1"
@@ -14,16 +14,16 @@ import (
 	k8sjson "k8s.io/apimachinery/pkg/runtime/serializer/json"
 )
 
-func writeDashboard(fs afero.Fs, path string, format config.OutputFormat, name string, board *sdk.Board) error {
-	if path == "" {
-		return errors.New("path cannot be empty")
+func writeDashboard(fs afero.Fs, directory string, format config.OutputFormat, name string, board *sdk.Board) error {
+	path := name
+	if directory != "" {
+		path = filepath.Join(directory, name)
 	}
-
 	switch format {
 	case config.OutputFormatJson:
-		return writeJson(fs, path, board)
+		return writeJson(fs, fmt.Sprintf("%s.json", path), board)
 	case config.OutputFormatKubernetes:
-		return writeKubernetes(fs, path, name, board)
+		return writeKubernetes(fs, fmt.Sprintf("%s.yaml", path), name, board)
 	default:
 		return fmt.Errorf("unknown format: %s", format)
 	}

@@ -43,9 +43,9 @@ const expectedJson = `{
 
 func TestWriteJson(t *testing.T) {
 	fs := afero.NewMemMapFs()
-	err := writeDashboard(fs, "dashboard.json", config.OutputFormatJson, "test", sdk.NewBoard("foobar"))
+	err := writeDashboard(fs, "", config.OutputFormatJson, "test", sdk.NewBoard("foobar"))
 	require.NoError(t, err)
-	yaml, err := afero.ReadFile(fs, "dashboard.json")
+	yaml, err := afero.ReadFile(fs, "test.json")
 	require.NoError(t, err)
 	require.Equal(t, expectedJson, string(yaml))
 }
@@ -93,9 +93,9 @@ spec:
 
 func TestWriteOperator(t *testing.T) {
 	fs := afero.NewMemMapFs()
-	err := writeDashboard(fs, "dashboard.yaml", config.OutputFormatKubernetes, "test", sdk.NewBoard("foobar"))
+	err := writeDashboard(fs, "", config.OutputFormatKubernetes, "test", sdk.NewBoard("foobar"))
 	require.NoError(t, err)
-	yaml, err := afero.ReadFile(fs, "dashboard.yaml")
+	yaml, err := afero.ReadFile(fs, "test.yaml")
 	require.NoError(t, err)
 	require.Equal(t, expectedYaml, string(yaml))
 }
