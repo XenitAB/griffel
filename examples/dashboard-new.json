@@ -305,7 +305,7 @@
         "strokeWidth": "",
         "targets": [
           {
-            "expr": "sum(keycloak_logins{instance=\"$instance\"}) by (realm)",
+            "expr": "sum(keycloak_logins{instance=\"$instance\", env=~\"${env}\"}) by (realm)",
             "format": "time_series",
             "intervalFactor": 1,
             "legendFormat": "{{realm}}",
@@ -370,7 +370,7 @@
         "strokeWidth": "",
         "targets": [
           {
-            "expr": "sum(keycloak_logins{instance=\"$instance\"}) by (client_id)",
+            "expr": "sum(keycloak_logins{instance=\"$instance\", env=~\"${env}\"}) by (client_id)",
             "format": "time_series",
             "intervalFactor": 1,
             "legendFormat": "{{client_id}}",
@@ -435,10 +435,8 @@
         "strokeWidth": "",
         "targets": [
           {
-            "expr": "sum(keycloak_registrations{instance=\"$instance\"}) by (client_id)",
+            "expr": "sum(keycloak_registrations{instance=\"$instance\", env=~\"${env}\"}) by (client_id)",
             "format": "time_series",
-            "hide": false,
-            "instant": false,
             "intervalFactor": 1,
             "legendFormat": "{{client_id}}",
             "refId": "A"

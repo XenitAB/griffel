@@ -3,10 +3,10 @@ patch:
     - name: env
       label: environment
 dashboards:
-  - name: "foo"
+  - name: "keycloak"
     source:
       kind: "Path"
-      value: "/home/philip/go/src/github.com/xenitab/griffel/examples/dashboard.json"
+      value: "./examples/dashboard.json"
     destination:
       format: "json"
-      path: "/home/philip/go/src/github.com/xenitab/griffel/examples/dashboard-new.json"
+      path: "./examples/dashboard-new.json"
