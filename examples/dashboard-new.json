@@ -1,0 +1,1065 @@
+{
+  "slug": "",
+  "title": "Keycloak Metrics",
+  "originalTitle": "",
+  "tags": [],
+  "style": "dark",
+  "timezone": "",
+  "editable": true,
+  "hideControls": false,
+  "sharedCrosshair": false,
+  "panels": [
+    {
+      "datasource": "${DS_PROMETHEUS}",
+      "editable": false,
+      "error": false,
+      "gridPos": {
+        "h": 7,
+        "w": 6,
+        "x": 0,
+        "y": 0
+      },
+      "hideTimeOverride": false,
+      "id": 5,
+      "isNew": false,
+      "span": 0,
+      "title": "Current Memory HEAP",
+      "description": "Memory currently being used by Keycloak.",
+      "transparent": false,
+      "type": "singlestat",
+      "colors": [
+        "#299c46",
+        "rgba(237, 129, 40, 0.89)",
+        "#d44a3a"
+      ],
+      "colorValue": true,
+      "colorBackground": false,
+      "decimals": 0,
+      "format": "percent",
+      "gauge": {
+        "maxValue": 100,
+        "minValue": 0,
+        "show": true,
+        "thresholdLabels": false,
+        "thresholdMarkers": true
+      },
+      "mappingType": 1,
+      "mappingTypes": [
+        {
+          "name": "value to text",
+          "value": 1
+        },
+        {
+          "name": "range to text",
+          "value": 2
+        }
+      ],
+      "maxDataPoints": 100,
+      "nullPointMode": "connected",
+      "postfix": "",
+      "postfixFontSize": "50%",
+      "prefix": "",
+      "prefixFontSize": "50%",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "sparkline": {
+        "fillColor": "rgba(31, 118, 189, 0.18)",
+        "lineColor": "rgb(31, 120, 193)",
+        "show": true
+      },
+      "targets": [
+        {
+          "refId": "B",
+          "expr": "(sum(jvm_memory_bytes_used{instance=\"$instance\", area=\"heap\", env=~\"${env}\"}) * 100) / sum(jvm_memory_bytes_max{instance=\"$instance\", area=\"heap\", env=~\"${env}\"})",
+          "intervalFactor": 1,
+          "format": "time_series"
+        }
+      ],
+      "thresholds": "80,90",
+      "valueFontSize": "80%",
+      "valueMaps": [],
+      "valueName": "current"
+    },
+    {
+      "datasource": "${DS_PROMETHEUS}",
+      "editable": false,
+      "error": false,
+      "gridPos": {
+        "h": 7,
+        "w": 6,
+        "x": 6,
+        "y": 0
+      },
+      "hideTimeOverride": false,
+      "id": 23,
+      "isNew": false,
+      "span": 0,
+      "title": "Current Memory nonHEAP",
+      "description": "Memory currently being used by Keycloak.",
+      "transparent": false,
+      "type": "singlestat",
+      "colors": [
+        "#299c46",
+        "rgba(237, 129, 40, 0.89)",
+        "#d44a3a"
+      ],
+      "colorValue": true,
+      "colorBackground": false,
+      "decimals": 0,
+      "format": "percent",
+      "gauge": {
+        "maxValue": 100,
+        "minValue": 0,
+        "show": true,
+        "thresholdLabels": false,
+        "thresholdMarkers": true
+      },
+      "mappingType": 1,
+      "mappingTypes": [
+        {
+          "name": "value to text",
+          "value": 1
+        },
+        {
+          "name": "range to text",
+          "value": 2
+        }
+      ],
+      "maxDataPoints": 100,
+      "nullPointMode": "connected",
+      "postfix": "",
+      "postfixFontSize": "50%",
+      "prefix": "",
+      "prefixFontSize": "50%",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "sparkline": {
+        "fillColor": "rgba(31, 118, 189, 0.18)",
+        "lineColor": "rgb(31, 120, 193)",
+        "show": true
+      },
+      "targets": [
+        {
+          "refId": "B",
+          "expr": "(sum(jvm_memory_bytes_used{instance=\"$instance\", area=\"nonheap\", env=~\"${env}\"}) * 100) / sum(jvm_memory_bytes_max{instance=\"$instance\", area=\"nonheap\", env=~\"${env}\"})",
+          "intervalFactor": 1,
+          "format": "time_series"
+        }
+      ],
+      "thresholds": "80,90",
+      "valueFontSize": "80%",
+      "valueMaps": [],
+      "valueName": "current"
+    },
+    {
+      "datasource": "${DS_PROMETHEUS}",
+      "editable": false,
+      "error": false,
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "hideTimeOverride": false,
+      "id": 12,
+      "isNew": false,
+      "renderer": "flot",
+      "span": 0,
+      "title": "Memory Usage",
+      "transparent": false,
+      "type": "graph",
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "fill": 2,
+      "legend": {
+        "alignAsTable": false,
+        "avg": false,
+        "current": false,
+        "hideEmpty": false,
+        "hideZero": false,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "sideWidth": 70,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "connected",
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(jvm_memory_bytes_max{instance=\"$instance\", job=\"keycloak\", env=~\"${env}\"})",
+          "intervalFactor": 1,
+          "legendFormat": "Max",
+          "format": "time_series"
+        },
+        {
+          "refId": "C",
+          "expr": "sum(jvm_memory_bytes_committed{instance=\"$instance\", job=\"keycloak\", env=~\"${env}\"})",
+          "intervalFactor": 1,
+          "legendFormat": "Comitted",
+          "format": "time_series"
+        },
+        {
+          "refId": "B",
+          "expr": "sum(jvm_memory_bytes_used{instance=\"$instance\", job=\"keycloak\", env=~\"${env}\"})",
+          "intervalFactor": 1,
+          "legendFormat": "Used",
+          "format": "time_series"
+        }
+      ],
+      "tooltip": {
+        "shared": true,
+        "value_type": "individual"
+      },
+      "xaxis": {
+        "format": "",
+        "logBase": 0,
+        "show": true
+      },
+      "yaxes": [
+        {
+          "format": "bytes",
+          "logBase": 1,
+          "min": 0,
+          "show": true
+        },
+        {
+          "format": "short",
+          "logBase": 1,
+          "show": false
+        }
+      ]
+    },
+    {
+      "datasource": "${DS_PROMETHEUS}",
+      "editable": false,
+      "error": false,
+      "gridPos": {
+        "h": 7,
+        "w": 6,
+        "x": 0,
+        "y": 7
+      },
+      "hideTimeOverride": true,
+      "id": 16,
+      "isNew": false,
+      "span": 0,
+      "title": "Logins Per REALM",
+      "transparent": false,
+      "type": "grafana-piechart-panel",
+      "CustomPanel": {
+        "aliasColors": {},
+        "breakPoint": "50%",
+        "cacheTimeout": null,
+        "combine": {
+          "label": "Others",
+          "threshold": 0
+        },
+        "datasource": "${DS_PROMETHEUS}",
+        "fontSize": "80%",
+        "format": "none",
+        "gridPos": {
+          "h": 7,
+          "w": 6,
+          "x": 0,
+          "y": 7
+        },
+        "hideTimeOverride": true,
+        "id": 16,
+        "interval": null,
+        "legend": {
+          "percentage": true,
+          "percentageDecimals": 0,
+          "show": true,
+          "values": false
+        },
+        "legendType": "Under graph",
+        "links": [],
+        "maxDataPoints": 3,
+        "nullPointMode": "connected",
+        "options": {},
+        "pieType": "donut",
+        "strokeWidth": "",
+        "targets": [
+          {
+            "expr": "sum(keycloak_logins{instance=\"$instance\"}) by (realm)",
+            "format": "time_series",
+            "intervalFactor": 1,
+            "legendFormat": "{{realm}}",
+            "refId": "B"
+          }
+        ],
+        "timeFrom": null,
+        "title": "Logins Per REALM",
+        "type": "grafana-piechart-panel",
+        "valueName": "current"
+      }
+    },
+    {
+      "datasource": "${DS_PROMETHEUS}",
+      "editable": false,
+      "error": false,
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 6,
+        "y": 7
+      },
+      "hideTimeOverride": true,
+      "id": 20,
+      "isNew": false,
+      "span": 0,
+      "title": "Logins Per CLIENT",
+      "transparent": false,
+      "type": "grafana-piechart-panel",
+      "CustomPanel": {
+        "aliasColors": {},
+        "breakPoint": "50%",
+        "cacheTimeout": null,
+        "combine": {
+          "label": "Others",
+          "threshold": 0
+        },
+        "datasource": "${DS_PROMETHEUS}",
+        "fontSize": "80%",
+        "format": "none",
+        "gridPos": {
+          "h": 7,
+          "w": 12,
+          "x": 6,
+          "y": 7
+        },
+        "hideTimeOverride": true,
+        "id": 20,
+        "interval": null,
+        "legend": {
+          "percentage": true,
+          "percentageDecimals": 0,
+          "show": true,
+          "values": false
+        },
+        "legendType": "Right side",
+        "links": [],
+        "maxDataPoints": 3,
+        "nullPointMode": "connected",
+        "options": {},
+        "pieType": "donut",
+        "strokeWidth": "",
+        "targets": [
+          {
+            "expr": "sum(keycloak_logins{instance=\"$instance\"}) by (client_id)",
+            "format": "time_series",
+            "intervalFactor": 1,
+            "legendFormat": "{{client_id}}",
+            "refId": "B"
+          }
+        ],
+        "timeFrom": null,
+        "title": "Logins Per CLIENT",
+        "type": "grafana-piechart-panel",
+        "valueName": "current"
+      }
+    },
+    {
+      "datasource": "${DS_PROMETHEUS}",
+      "editable": false,
+      "error": false,
+      "gridPos": {
+        "h": 7,
+        "w": 6,
+        "x": 18,
+        "y": 7
+      },
+      "hideTimeOverride": true,
+      "id": 17,
+      "isNew": false,
+      "span": 0,
+      "title": "Registrations Per CLIENT",
+      "transparent": false,
+      "type": "grafana-piechart-panel",
+      "CustomPanel": {
+        "aliasColors": {},
+        "breakPoint": "50%",
+        "cacheTimeout": null,
+        "combine": {
+          "label": "Others",
+          "threshold": 0
+        },
+        "datasource": "${DS_PROMETHEUS}",
+        "fontSize": "80%",
+        "format": "none",
+        "gridPos": {
+          "h": 7,
+          "w": 6,
+          "x": 18,
+          "y": 7
+        },
+        "hideTimeOverride": true,
+        "id": 17,
+        "interval": null,
+        "legend": {
+          "percentage": true,
+          "percentageDecimals": 0,
+          "show": true,
+          "values": false
+        },
+        "legendType": "Under graph",
+        "links": [],
+        "maxDataPoints": 3,
+        "nullPointMode": "connected",
+        "options": {},
+        "pieType": "donut",
+        "strokeWidth": "",
+        "targets": [
+          {
+            "expr": "sum(keycloak_registrations{instance=\"$instance\"}) by (client_id)",
+            "format": "time_series",
+            "hide": false,
+            "instant": false,
+            "intervalFactor": 1,
+            "legendFormat": "{{client_id}}",
+            "refId": "A"
+          }
+        ],
+        "timeFrom": null,
+        "title": "Registrations Per CLIENT",
+        "type": "grafana-piechart-panel",
+        "valueName": "current"
+      }
+    },
+    {
+      "datasource": "${DS_PROMETHEUS}",
+      "editable": false,
+      "error": false,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 14
+      },
+      "hideTimeOverride": false,
+      "id": 1,
+      "isNew": false,
+      "renderer": "flot",
+      "span": 0,
+      "title": "Logins per REALM",
+      "transparent": false,
+      "type": "graph",
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "fill": 1,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": false,
+        "hideEmpty": false,
+        "hideZero": false,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "sideWidth": 100,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "connected",
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(increase(keycloak_logins{instance=\"$instance\", job=\"keycloak\", env=~\"${env}\"}[1h])) by (realm)",
+          "intervalFactor": 1,
+          "legendFormat": "{{realm}}",
+          "format": "time_series"
+        }
+      ],
+      "tooltip": {
+        "shared": true,
+        "value_type": "individual"
+      },
+      "xaxis": {
+        "format": "",
+        "logBase": 0,
+        "show": true
+      },
+      "yaxes": [
+        {
+          "format": "none",
+          "logBase": 1,
+          "min": 0,
+          "show": true
+        },
+        {
+          "format": "short",
+          "logBase": 1,
+          "show": false
+        }
+      ]
+    },
+    {
+      "datasource": "${DS_PROMETHEUS}",
+      "editable": false,
+      "error": false,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 14
+      },
+      "hideTimeOverride": false,
+      "id": 7,
+      "isNew": false,
+      "renderer": "flot",
+      "span": 0,
+      "title": "Login Errors on realm $realm",
+      "transparent": false,
+      "type": "graph",
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "fill": 1,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": true,
+        "hideEmpty": false,
+        "hideZero": true,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "connected",
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "increase(keycloak_failed_login_attempts{instance=\"$instance\", job=\"keycloak\", provider=\"keycloak\", realm=\"$realm\", env=~\"${env}\"}[1h])",
+          "intervalFactor": 1,
+          "legendFormat": "{{error}}",
+          "format": "time_series"
+        }
+      ],
+      "tooltip": {
+        "shared": true,
+        "value_type": "individual"
+      },
+      "xaxis": {
+        "format": "",
+        "logBase": 0,
+        "show": true
+      },
+      "yaxes": [
+        {
+          "format": "none",
+          "logBase": 1,
+          "min": 0,
+          "show": true
+        },
+        {
+          "format": "short",
+          "logBase": 1,
+          "show": false
+        }
+      ]
+    },
+    {
+      "datasource": "${DS_PROMETHEUS}",
+      "editable": false,
+      "error": false,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 22
+      },
+      "hideTimeOverride": false,
+      "id": 18,
+      "isNew": false,
+      "renderer": "flot",
+      "span": 0,
+      "title": "Logins per CLIENT on realm $realm",
+      "transparent": false,
+      "type": "graph",
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "fill": 1,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": false,
+        "hideEmpty": false,
+        "hideZero": false,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "sideWidth": 100,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "connected",
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "increase(keycloak_logins{instance=\"$instance\", job=\"keycloak\", realm=\"$realm\", provider=\"keycloak\", env=~\"${env}\"}[1h])",
+          "intervalFactor": 2,
+          "legendFormat": "{{client_id}}",
+          "format": "time_series"
+        }
+      ],
+      "tooltip": {
+        "shared": true,
+        "value_type": "individual"
+      },
+      "xaxis": {
+        "format": "",
+        "logBase": 0,
+        "show": true
+      },
+      "yaxes": [
+        {
+          "format": "none",
+          "logBase": 1,
+          "min": 0,
+          "show": true
+        },
+        {
+          "format": "short",
+          "logBase": 1,
+          "show": false
+        }
+      ]
+    },
+    {
+      "datasource": "${DS_PROMETHEUS}",
+      "editable": false,
+      "error": false,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 22
+      },
+      "hideTimeOverride": false,
+      "id": 19,
+      "isNew": false,
+      "renderer": "flot",
+      "span": 0,
+      "title": "Login Errors for $ClientId",
+      "transparent": false,
+      "type": "graph",
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "fill": 1,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": true,
+        "hideEmpty": false,
+        "hideZero": false,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "connected",
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "increase(keycloak_failed_login_attempts{instance=\"$instance\", job=\"keycloak\", provider=\"keycloak\", realm=\"$realm\", client_id=\"$ClientId\", env=~\"${env}\"}[1h])",
+          "intervalFactor": 2,
+          "legendFormat": "{{error}}",
+          "format": "time_series"
+        }
+      ],
+      "tooltip": {
+        "shared": true,
+        "value_type": "individual"
+      },
+      "xaxis": {
+        "format": "",
+        "logBase": 0,
+        "show": true
+      },
+      "yaxes": [
+        {
+          "format": "none",
+          "logBase": 1,
+          "min": 0,
+          "show": true
+        },
+        {
+          "format": "short",
+          "logBase": 1,
+          "show": false
+        }
+      ]
+    },
+    {
+      "datasource": "${DS_PROMETHEUS}",
+      "editable": false,
+      "error": false,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 30
+      },
+      "hideTimeOverride": false,
+      "id": 22,
+      "isNew": false,
+      "renderer": "flot",
+      "span": 0,
+      "title": "Registrations per CLIENT on relm $realm",
+      "transparent": false,
+      "type": "graph",
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "fill": 1,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": false,
+        "hideEmpty": false,
+        "hideZero": false,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "sideWidth": 100,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "connected",
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "increase(keycloak_registrations{instance=\"$instance\", job=\"keycloak\", realm=\"$realm\", provider=\"keycloak\", env=~\"${env}\"}[1h])",
+          "intervalFactor": 2,
+          "legendFormat": "{{client_id}}",
+          "format": "time_series"
+        }
+      ],
+      "tooltip": {
+        "shared": true,
+        "value_type": "individual"
+      },
+      "xaxis": {
+        "format": "",
+        "logBase": 0,
+        "show": true
+      },
+      "yaxes": [
+        {
+          "format": "none",
+          "logBase": 1,
+          "min": 0,
+          "show": true
+        },
+        {
+          "format": "short",
+          "logBase": 1,
+          "show": false
+        }
+      ]
+    },
+    {
+      "datasource": "${DS_PROMETHEUS}",
+      "editable": false,
+      "error": false,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 30
+      },
+      "hideTimeOverride": false,
+      "id": 21,
+      "isNew": false,
+      "renderer": "flot",
+      "span": 0,
+      "title": "Registration Errors for $ClientId",
+      "transparent": false,
+      "type": "graph",
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "fill": 1,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": true,
+        "hideEmpty": false,
+        "hideZero": false,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "connected",
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "increase(keycloak_registrations_errors{instance=\"$instance\", job=\"keycloak\", provider=\"keycloak\", realm=\"$realm\", client_id=\"$ClientId\", env=~\"${env}\"}[1h])",
+          "intervalFactor": 2,
+          "legendFormat": "{{error}}",
+          "format": "time_series"
+        }
+      ],
+      "tooltip": {
+        "shared": true,
+        "value_type": "individual"
+      },
+      "xaxis": {
+        "format": "",
+        "logBase": 0,
+        "show": true
+      },
+      "yaxes": [
+        {
+          "format": "none",
+          "logBase": 1,
+          "min": 0,
+          "show": true
+        },
+        {
+          "format": "short",
+          "logBase": 1,
+          "show": false
+        }
+      ]
+    }
+  ],
+  "rows": null,
+  "templating": {
+    "list": [
+      {
+        "name": "instance",
+        "type": "query",
+        "datasource": "${DS_PROMETHEUS}",
+        "refresh": 1,
+        "options": [],
+        "includeAll": false,
+        "allFormat": "",
+        "allValue": "",
+        "multi": false,
+        "multiFormat": "",
+        "query": "label_values(keycloak_logins{env=~\"${env}\"}, instance)",
+        "regex": "",
+        "current": {
+          "text": null,
+          "value": null
+        },
+        "label": "Instance",
+        "hide": 0,
+        "sort": 0
+      },
+      {
+        "name": "realm",
+        "type": "query",
+        "datasource": "${DS_PROMETHEUS}",
+        "refresh": 1,
+        "options": [],
+        "includeAll": false,
+        "allFormat": "",
+        "allValue": "",
+        "multi": false,
+        "multiFormat": "",
+        "query": "label_values(keycloak_logins{instance=\"$instance\", job=\"keycloak\", provider=\"keycloak\", env=~\"${env}\"}, realm)",
+        "regex": "",
+        "current": {
+          "text": null,
+          "value": null
+        },
+        "label": "Realm",
+        "hide": 0,
+        "sort": 0
+      },
+      {
+        "name": "ClientId",
+        "type": "query",
+        "datasource": "${DS_PROMETHEUS}",
+        "refresh": 1,
+        "options": [],
+        "includeAll": false,
+        "allFormat": "",
+        "allValue": "",
+        "multi": false,
+        "multiFormat": "",
+        "query": "label_values(keycloak_logins{instance=\"$instance\", job=\"keycloak\", provider=\"keycloak\", realm=\"$realm\", env=~\"${env}\"}, client_id)",
+        "regex": "",
+        "current": {
+          "text": null,
+          "value": null
+        },
+        "label": "ClientId",
+        "hide": 0,
+        "sort": 0
+      },
+      {
+        "name": "env",
+        "type": "",
+        "datasource": null,
+        "refresh": false,
+        "options": null,
+        "includeAll": true,
+        "allFormat": "",
+        "allValue": "",
+        "multi": false,
+        "multiFormat": "",
+        "query": "",
+        "regex": "",
+        "current": {
+          "text": null,
+          "value": null
+        },
+        "label": "environment",
+        "hide": 0,
+        "sort": 0
+      }
+    ]
+  },
+  "annotations": {
+    "list": [
+      {
+        "name": "Annotations \u0026 Alerts",
+        "datasource": "-- Grafana --",
+        "showLine": false,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "lineColor": "",
+        "iconSize": 0,
+        "enable": true,
+        "query": "",
+        "expr": "",
+        "step": "",
+        "textField": "",
+        "textFormat": "",
+        "titleFormat": "",
+        "tagsField": "",
+        "tags": null,
+        "tagKeys": "",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "refresh": "5s",
+  "schemaVersion": 18,
+  "version": 1,
+  "links": [],
+  "time": {
+    "from": "now-12h",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "5s",
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ],
+    "time_options": [
+      "5m",
+      "15m",
+      "1h",
+      "6h",
+      "12h",
+      "24h",
+      "2d",
+      "7d",
+      "30d"
+    ]
+  },
+  "graphTooltip": 1
+}

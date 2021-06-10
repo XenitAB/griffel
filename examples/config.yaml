@@ -1,0 +1,12 @@
+patch:
+  variables:
+    - name: env
+      label: environment
+dashboards:
+  - name: "foo"
+    source:
+      kind: "Path"
+      value: "/home/philip/go/src/github.com/xenitab/griffel/examples/dashboard.json"
+    destination:
+      format: "json"
+      path: "/home/philip/go/src/github.com/xenitab/griffel/examples/dashboard-new.json"
