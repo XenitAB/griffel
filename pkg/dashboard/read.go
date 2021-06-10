@@ -10,17 +10,18 @@ import (
 	"time"
 
 	"github.com/grafana-tools/sdk"
+	"github.com/xenitab/griffel/pkg/config"
 )
 
-func readDashboard(kind string, value string) (*sdk.Board, error) {
+func readDashboard(kind config.SourceKind, value string) (*sdk.Board, error) {
 	var b []byte
 	var err error
 	switch kind {
-	case "GrafanaLabs":
+	case config.SourceKindGrafanaLabs:
 		b, err = getFromGrafanaLabs(value)
-	case "URL":
+	case config.SourceKindURL:
 		b, err = getFromUrl(value)
-	case "Path":
+	case config.SourceKindPath:
 		b, err = getFromPath(value)
 	default:
 		return nil, errors.New("unknown dashboard source kind")

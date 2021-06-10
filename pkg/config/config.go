@@ -28,14 +28,29 @@ type Dashboard struct {
 	Destination DashboardDestination `yaml:"destination"`
 }
 
+type SourceKind string
+
+const (
+	SourceKindGrafanaLabs SourceKind = "GrafanaLabs"
+	SourceKindURL                    = "URL"
+	SourceKindPath                   = "Path"
+)
+
 type DashboardSource struct {
-	Kind  string `yaml:"kind"` // GrafanaLabs, URL or Path
-	Value string `yaml:"value"`
+	Kind  SourceKind `yaml:"kind"`
+	Value string     `yaml:"value"`
 }
 
+type OutputFormat string
+
+const (
+	OutputFormatJson       OutputFormat = "JSON"
+	OutputFormatKubernetes              = "Kubernetes"
+)
+
 type DashboardDestination struct {
-	Format string `yaml:"format"` // JSON or Operator
-	Path   string `yaml:"path"`
+	Format OutputFormat `yaml:"format"`
+	Path   string       `yaml:"path"`
 }
 
 func ParseConfig(path string) (*Config, error) {

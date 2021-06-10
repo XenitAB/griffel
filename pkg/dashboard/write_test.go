@@ -6,6 +6,7 @@ import (
 	"github.com/grafana-tools/sdk"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/require"
+	"github.com/xenitab/griffel/pkg/config"
 )
 
 const expectedJson = `{
@@ -42,7 +43,7 @@ const expectedJson = `{
 
 func TestWriteJson(t *testing.T) {
 	fs := afero.NewMemMapFs()
-	err := writeJson(fs, "dashboard.json", sdk.NewBoard("foobar"))
+	err := writeDashboard(fs, "dashboard.json", config.OutputFormatJson, "test", sdk.NewBoard("foobar"))
 	require.NoError(t, err)
 	yaml, err := afero.ReadFile(fs, "dashboard.json")
 	require.NoError(t, err)
@@ -92,7 +93,7 @@ spec:
 
 func TestWriteOperator(t *testing.T) {
 	fs := afero.NewMemMapFs()
-	err := writeOperator(fs, "dashboard.yaml", "test", sdk.NewBoard("foobar"))
+	err := writeDashboard(fs, "dashboard.yaml", config.OutputFormatKubernetes, "test", sdk.NewBoard("foobar"))
 	require.NoError(t, err)
 	yaml, err := afero.ReadFile(fs, "dashboard.yaml")
 	require.NoError(t, err)
