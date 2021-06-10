@@ -2,11 +2,12 @@ package dashboard
 
 import (
 	"github.com/grafana-tools/sdk"
+	"github.com/spf13/afero"
 
 	"github.com/xenitab/griffel/pkg/config"
 )
 
-func Patch(cfg *config.Config) error {
+func Patch(fs afero.Fs, cfg *config.Config) error {
 	tplVars := []sdk.TemplateVar{}
 	for _, template := range cfg.Patch.Variables {
 		tplVars = append(tplVars, sdk.TemplateVar{
@@ -34,7 +35,7 @@ func Patch(cfg *config.Config) error {
 		}
 		board.Panels = panels
 
-		err = writeDashboard(dash.Destination.Format, dash.Destination.Path, board)
+		err = writeDashboard(fs, dash.Destination.Path, dash.Destination.Format, dash.Name, board)
 		if err != nil {
 			return err
 		}

@@ -1,6 +1,7 @@
 package config
 
 import (
+	"errors"
 	"os"
 
 	"gopkg.in/yaml.v2"
@@ -38,6 +39,10 @@ type DashboardDestination struct {
 }
 
 func ParseConfig(path string) (*Config, error) {
+	if path == "" {
+		return nil, errors.New("config path cannot be empty")
+	}
+
 	b, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err

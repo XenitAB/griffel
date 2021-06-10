@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/spf13/afero"
 	flag "github.com/spf13/pflag"
 
 	"github.com/xenitab/griffel/pkg/config"
@@ -20,12 +21,13 @@ func init() {
 }
 
 func main() {
+	fs := afero.NewOsFs()
 	cfg, err := config.ParseConfig(configPath)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	err = dashboard.Patch(cfg)
+	err = dashboard.Patch(fs, cfg)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
