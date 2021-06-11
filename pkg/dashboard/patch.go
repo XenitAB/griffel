@@ -11,6 +11,7 @@ import (
 )
 
 func patchTemplating(templating sdk.Templating, tplVars []sdk.TemplateVar, datasource *sdk.TemplateVar) (sdk.Templating, error) {
+	ds := "${DS_PROMETHEUS}"
 	newList := []sdk.TemplateVar{}
 	if datasource != nil {
 		newList = append(newList, *datasource)
@@ -22,6 +23,7 @@ func patchTemplating(templating sdk.Templating, tplVars []sdk.TemplateVar, datas
 		if template.Type == "datasource" && datasource != nil {
 			continue
 		}
+		template.Datasource = &ds
 		if template.Type != "query" {
 			newList = append(newList, template)
 			continue
@@ -38,7 +40,9 @@ func patchTemplating(templating sdk.Templating, tplVars []sdk.TemplateVar, datas
 }
 
 func patchPanels(panels []*sdk.Panel, tplVars []sdk.TemplateVar) ([]*sdk.Panel, error) {
+	ds := "${DS_PROMETHEUS}"
 	for i, panel := range panels {
+		panels[i].Datasource = &ds
 		targets, err := getTargets(panel)
 		if err != nil {
 			return nil, err
@@ -148,8 +152,8 @@ func appendVariables(exprStr string, tplVars []sdk.TemplateVar) (string, error) 
 	// to not apply label filter to all parameters
 	if strings.HasPrefix(exprStr, "label_values(") {
 		funcExpr := expr.(*metricsql.FuncExpr)
-		if len(funcExpr.Args) != 2 {
-			return "", errors.New("label_value does not have two parameters")
+		if len(funcExpr.Args) == 0 {
+			return "", errors.New("label_value cannot have zero arguments")
 		}
 		metricExpr := funcExpr.Args[0].(*metricsql.MetricExpr)
 		metricExpr.LabelFilters = append(metricExpr.LabelFilters, labelFilters...)
