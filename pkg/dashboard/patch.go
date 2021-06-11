@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"math/rand"
+	"regexp"
 	"strings"
 
 	"github.com/VictoriaMetrics/metricsql"
@@ -119,30 +121,31 @@ func getCustomTargets(customPanel *sdk.CustomPanel) (*[]sdk.Target, error) {
 	}
 	b, err := json.Marshal(targetsMap)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("could not marshal custom panel targets: %w", err)
 	}
 	targets := &[]sdk.Target{}
 	err = json.Unmarshal(b, targets)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("could not unmarshal to target: %w", err)
 	}
-	return targets, err
+	return targets, nil
 }
 
 func appendVariables(exprStr string, tplVars []sdk.TemplateVar) (string, error) {
 	if exprStr == "" {
 		return "", errors.New("expression string cannot be empty")
 	}
+	exprStr, replaceCache := replaceInterval(exprStr)
 	expr, err := metricsql.Parse(exprStr)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("could not parse promql: %w", err)
 	}
 
 	labelFilters := []metricsql.LabelFilter{}
 	for _, tplVar := range tplVars {
 		labelFilters = append(labelFilters, metricsql.LabelFilter{
 			Label:    tplVar.Name, // no this is not wrong
-			Value:    fmt.Sprintf("${%s}", tplVar.Name),
+			Value:    fmt.Sprintf("$%s", tplVar.Name),
 			IsRegexp: true,
 		})
 	}
@@ -166,5 +169,37 @@ func appendVariables(exprStr string, tplVars []sdk.TemplateVar) (string, error) 
 			metricExpr.LabelFilters = append(metricExpr.LabelFilters, labelFilters...)
 		}
 	})
-	return string(expr.AppendString(nil)), nil
+	result := unReplaceInterval(string(expr.AppendString(nil)), replaceCache)
+	return result, nil
+}
+
+// These two functions are dirty but a quick work around until I can figure
+// out how to parse promql that contains gragana variables in the interval.
+// Variables in the label filter is ok because they look like normal strings.
+// When used in the interval they are expected to be in a duration unit.
+
+func replaceInterval(expr string) (string, map[string]string) {
+	betweenRegex := regexp.MustCompile(`\[(.*?)\]`)
+	between := betweenRegex.FindString(expr)
+
+	variableRegex := regexp.MustCompile(`\$[a-z]+`)
+	variables := variableRegex.FindAllString(between, -1)
+
+	cache := map[string]string{}
+	result := expr
+	for _, v := range variables {
+		duration := fmt.Sprintf("%vm", rand.Int())
+		cache[duration] = v
+		result = strings.ReplaceAll(result, v, duration)
+	}
+
+	return result, cache
+}
+
+func unReplaceInterval(expr string, cache map[string]string) string {
+	result := expr
+	for k, v := range cache {
+		result = strings.ReplaceAll(result, k, v)
+	}
+	return result
 }

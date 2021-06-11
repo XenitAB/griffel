@@ -38,7 +38,7 @@ func TestPatchTemplating(t *testing.T) {
 	require.Equal(t, "DS_PROMETHEUS", newTemplating.List[1].Name)
 	require.Equal(t, "", newTemplating.List[1].Query)
 	require.Equal(t, "foo", newTemplating.List[2].Name)
-	require.Equal(t, "query_1{bar=~\"${bar}\"}", newTemplating.List[2].Query)
+	require.Equal(t, "query_1{bar=~\"$bar\"}", newTemplating.List[2].Query)
 }
 
 func TestPatchPanel(t *testing.T) {
@@ -65,10 +65,22 @@ func TestPatchPanel(t *testing.T) {
 
 	newPanels, err := patchPanels(panels, tplVars)
 	require.NoError(t, err)
-	require.Equal(t, "sum(keycloak_registrations{instance=\"$instance\", foo=~\"${foo}\"})", newPanels[0].GraphPanel.Targets[0].Expr)
+	require.Equal(t, "sum(keycloak_registrations{instance=\"$instance\", foo=~\"$foo\"})", newPanels[0].GraphPanel.Targets[0].Expr)
 	newCustomPanel := *newPanels[1].CustomPanel
 	newTargets := newCustomPanel["targets"].([]map[string]interface{})
-	require.Equal(t, "sum(keycloak_registrations{instance=\"$instance\", foo=~\"${foo}\"})", newTargets[0]["expr"])
+	require.Equal(t, "sum(keycloak_registrations{instance=\"$instance\", foo=~\"$foo\"})", newTargets[0]["expr"])
+}
+
+func TestAppendFilterBasic(t *testing.T) {
+	tplVars := []sdk.TemplateVar{
+		{
+			Name:  "foo",
+			Label: "Foo",
+		},
+	}
+	exprString, err := appendVariables("sum(gotk_reconcile_condition{namespace=~\"$namespace\", type=\"Ready\", status=\"False\", kind=~\"Kustomization|HelmRelease\"})", tplVars)
+	require.NoError(t, err)
+	require.Equal(t, "sum(gotk_reconcile_condition{namespace=~\"$namespace\", type=\"Ready\", status=\"False\", kind=~\"Kustomization|HelmRelease\", foo=~\"$foo\"})", exprString)
 }
 
 func TestAppendFilterLabelValues(t *testing.T) {
@@ -80,5 +92,17 @@ func TestAppendFilterLabelValues(t *testing.T) {
 	}
 	exprString, err := appendVariables("label_values(metric, label)", tplVars)
 	require.NoError(t, err)
-	require.Equal(t, "label_values(metric{foo=~\"${foo}\"}, label)", exprString)
+	require.Equal(t, "label_values(metric{foo=~\"$foo\"}, label)", exprString)
+}
+
+func TestAppendFilterWithVariables(t *testing.T) {
+	tplVars := []sdk.TemplateVar{
+		{
+			Name:  "foo",
+			Label: "Foo",
+		},
+	}
+	exprString, err := appendVariables("sort_desc(sum(irate(container_network_transmit_packets_dropped_total{cluster=\"$cluster\",namespace=~\".+\"}[$interval:$resolution])) by (namespace))", tplVars)
+	require.NoError(t, err)
+	require.Equal(t, "sort_desc(sum(irate(container_network_transmit_packets_dropped_total{cluster=\"$cluster\", namespace=~\".+\", foo=~\"$foo\"}[$interval:$resolution])) by (namespace))", exprString)
 }
