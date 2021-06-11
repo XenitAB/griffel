@@ -1,6 +1,8 @@
 package dashboard
 
 import (
+	"fmt"
+
 	"github.com/grafana-tools/sdk"
 	"github.com/spf13/afero"
 
@@ -42,6 +44,8 @@ func Patch(fs afero.Fs, cfg *config.Config) error {
 	}
 
 	for _, dash := range cfg.Dashboards {
+		fmt.Println(dash.Name)
+
 		board, err := readDashboard(dash.Source.Kind, dash.Source.Value)
 		if err != nil {
 			return err
@@ -58,6 +62,12 @@ func Patch(fs afero.Fs, cfg *config.Config) error {
 			return err
 		}
 		board.Panels = panels
+
+		rows, err := patchRows(board.Rows, tplVars)
+		if err != nil {
+			return err
+		}
+		board.Rows = rows
 
 		err = writeDashboard(fs, dash.Destination.Directory, dash.Destination.Format, dash.Name, board)
 		if err != nil {

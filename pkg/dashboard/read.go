@@ -27,13 +27,13 @@ func readDashboard(kind config.SourceKind, value string) (*sdk.Board, error) {
 		return nil, errors.New("unknown dashboard source kind")
 	}
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("could not get source: %w", err)
 	}
 
 	board := &sdk.Board{}
 	err = json.Unmarshal(b, board)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("could not parse dashboard: %w", err)
 	}
 	return board, nil
 }

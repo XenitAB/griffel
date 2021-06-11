@@ -41,10 +41,31 @@ func patchTemplating(templating sdk.Templating, tplVars []sdk.TemplateVar, datas
 	return templating, nil
 }
 
+func patchRows(rows []*sdk.Row, tplVars []sdk.TemplateVar) ([]*sdk.Row, error) {
+	for i, row := range rows {
+		panels, err := patchPanels(toPanelPointerSlice(row.Panels), tplVars)
+		if err != nil {
+			return nil, err
+		}
+		rows[i].Panels = fromPanelPointerSlice(panels)
+	}
+	return rows, nil
+}
+
 func patchPanels(panels []*sdk.Panel, tplVars []sdk.TemplateVar) ([]*sdk.Panel, error) {
 	ds := "${DS_PROMETHEUS}"
 	for i, panel := range panels {
 		panels[i].Datasource = &ds
+
+		if panel.RowPanel != nil && len(panel.RowPanel.Panels) > 0 {
+			rowPanels, err := patchPanels(toPanelPointerSlice(panel.RowPanel.Panels), tplVars)
+			if err != nil {
+				return nil, err
+			}
+			panels[i].RowPanel.Panels = fromPanelPointerSlice(rowPanels)
+			continue
+		}
+
 		targets, err := getTargets(panel)
 		if err != nil {
 			return nil, err
@@ -173,6 +194,22 @@ func appendVariables(exprStr string, tplVars []sdk.TemplateVar) (string, error) 
 	return result, nil
 }
 
+func toPanelPointerSlice(panels []sdk.Panel) []*sdk.Panel {
+	newPanels := []*sdk.Panel{}
+	for i := range panels {
+		newPanels = append(newPanels, &panels[i])
+	}
+	return newPanels
+}
+
+func fromPanelPointerSlice(panels []*sdk.Panel) []sdk.Panel {
+	newPanels := []sdk.Panel{}
+	for _, p := range panels {
+		newPanels = append(newPanels, *p)
+	}
+	return newPanels
+}
+
 // These two functions are dirty but a quick work around until I can figure
 // out how to parse promql that contains gragana variables in the interval.
 // Variables in the label filter is ok because they look like normal strings.
@@ -182,7 +219,7 @@ func replaceInterval(expr string) (string, map[string]string) {
 	betweenRegex := regexp.MustCompile(`\[(.*?)\]`)
 	between := betweenRegex.FindString(expr)
 
-	variableRegex := regexp.MustCompile(`\$[a-z]+`)
+	variableRegex := regexp.MustCompile(`\$[a-z_]+`)
 	variables := variableRegex.FindAllString(between, -1)
 
 	cache := map[string]string{}

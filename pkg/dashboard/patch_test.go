@@ -102,7 +102,7 @@ func TestAppendFilterWithVariables(t *testing.T) {
 			Label: "Foo",
 		},
 	}
-	exprString, err := appendVariables("sort_desc(sum(irate(container_network_transmit_packets_dropped_total{cluster=\"$cluster\",namespace=~\".+\"}[$interval:$resolution])) by (namespace))", tplVars)
+	exprString, err := appendVariables("sort_desc(sum(irate(container_network_transmit_packets_dropped_total{cluster=\"$cluster\",namespace=~\".+\"}[$__interval:$resolution])) by (namespace))", tplVars)
 	require.NoError(t, err)
-	require.Equal(t, "sort_desc(sum(irate(container_network_transmit_packets_dropped_total{cluster=\"$cluster\", namespace=~\".+\", foo=~\"$foo\"}[$interval:$resolution])) by (namespace))", exprString)
+	require.Equal(t, "sort_desc(sum(irate(container_network_transmit_packets_dropped_total{cluster=\"$cluster\", namespace=~\".+\", foo=~\"$foo\"}[$__interval:$resolution])) by (namespace))", exprString)
 }
