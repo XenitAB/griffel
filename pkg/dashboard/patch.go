@@ -75,7 +75,7 @@ func patchPanels(panels []*sdk.Panel, tplVars []sdk.TemplateVar) ([]*sdk.Panel, 
 		}
 		newTargets := []sdk.Target{}
 		for _, target := range *targets {
-			// Skip if target is not Prometheus
+			// Expr is only set for Prometheus targets
 			if target.Expr == "" {
 				continue
 			}
@@ -135,9 +135,20 @@ func overrideTarget(panel *sdk.Panel, targets []sdk.Target) error {
 		(*panel.CustomPanel)["targets"] = *targetsMap
 		return nil
 	}
-	panel.ResetTargets()
-	for i := range targets {
-		panel.AddTarget(&targets[i])
+
+	switch panel.OfType {
+	case sdk.GraphType:
+		panel.GraphPanel.Targets = targets
+	case sdk.SinglestatType:
+		panel.SinglestatPanel.Targets = targets
+	case sdk.StatType:
+		panel.StatPanel.Targets = targets
+	case sdk.TableType:
+		panel.TablePanel.Targets = targets
+	case sdk.BarGaugeType:
+		panel.BarGaugePanel.Targets = targets
+	case sdk.HeatmapType:
+		panel.HeatmapPanel.Targets = targets
 	}
 	return nil
 }
