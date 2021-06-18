@@ -13,3 +13,6 @@ test: fmt vet
 
 build:
 	go build -o bin/griffel
+
+e2e: build
+	./test/e2e/e2e.sh

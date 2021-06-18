@@ -44,9 +44,22 @@ func TestPatchTemplating(t *testing.T) {
 func TestPatchPanel(t *testing.T) {
 	graphPanel := sdk.NewGraph("graph")
 	graphPanel.SetTarget(&sdk.Target{
-		RefID:  "A",
-		Expr:   "sum(keycloak_registrations{instance=\"$instance\"})",
-		Format: "time_series",
+		RefID:        "A",
+		Expr:         "sum(keycloak_registrations{instance=\"$instance\"})",
+		LegendFormat: "foo",
+		Format:       "time_series",
+	})
+	graphPanel.SetTarget(&sdk.Target{
+		RefID:        "B",
+		Expr:         "sum(keycloak_registrations{instance=\"$instance\"})",
+		LegendFormat: "bar",
+		Format:       "time_series",
+	})
+	graphPanel.SetTarget(&sdk.Target{
+		RefID:        "C",
+		Expr:         "sum(keycloak_registrations{instance=\"$instance\"})",
+		LegendFormat: "baz",
+		Format:       "time_series",
 	})
 	customPanel := sdk.NewCustom("custom")
 	(*customPanel.CustomPanel)["targets"] = []map[string]string{
@@ -65,7 +78,16 @@ func TestPatchPanel(t *testing.T) {
 
 	newPanels, err := patchPanels(panels, tplVars)
 	require.NoError(t, err)
+	require.Equal(t, "A", newPanels[0].GraphPanel.Targets[0].RefID)
+	require.Equal(t, "foo", newPanels[0].GraphPanel.Targets[0].LegendFormat)
 	require.Equal(t, "sum(keycloak_registrations{instance=\"$instance\", foo=~\"$foo\"})", newPanels[0].GraphPanel.Targets[0].Expr)
+	require.Equal(t, "B", newPanels[0].GraphPanel.Targets[1].RefID)
+	require.Equal(t, "bar", newPanels[0].GraphPanel.Targets[1].LegendFormat)
+	require.Equal(t, "sum(keycloak_registrations{instance=\"$instance\", foo=~\"$foo\"})", newPanels[0].GraphPanel.Targets[1].Expr)
+	require.Equal(t, "C", newPanels[0].GraphPanel.Targets[2].RefID)
+	require.Equal(t, "baz", newPanels[0].GraphPanel.Targets[2].LegendFormat)
+	require.Equal(t, "sum(keycloak_registrations{instance=\"$instance\", foo=~\"$foo\"})", newPanels[0].GraphPanel.Targets[2].Expr)
+
 	newCustomPanel := *newPanels[1].CustomPanel
 	newTargets := newCustomPanel["targets"].([]map[string]interface{})
 	require.Equal(t, "sum(keycloak_registrations{instance=\"$instance\", foo=~\"$foo\"})", newTargets[0]["expr"])

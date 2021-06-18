@@ -73,6 +73,7 @@ func patchPanels(panels []*sdk.Panel, tplVars []sdk.TemplateVar) ([]*sdk.Panel, 
 		if targets == nil {
 			continue
 		}
+		newTargets := []sdk.Target{}
 		for _, target := range *targets {
 			// Skip if target is not Prometheus
 			if target.Expr == "" {
@@ -82,10 +83,10 @@ func patchPanels(panels []*sdk.Panel, tplVars []sdk.TemplateVar) ([]*sdk.Panel, 
 			if err != nil {
 				return nil, err
 			}
-			// TODO (Philip): Skip updating if expression has not changed
 			target.Expr = expr
-			setTarget(panels[i], &target)
+			newTargets = append(newTargets, target)
 		}
+		overrideTarget(panels[i], newTargets)
 	}
 	return panels, nil
 }
@@ -99,38 +100,6 @@ func getTargets(panel *sdk.Panel) (*[]sdk.Target, error) {
 		return targets, nil
 	}
 	return panel.GetTargets(), nil
-}
-
-func setTarget(panel *sdk.Panel, target *sdk.Target) error {
-	if panel.CustomPanel != nil {
-		targets, err := getCustomTargets(panel.CustomPanel)
-		if err != nil {
-			return err
-		}
-		setTarget := func(t *sdk.Target, targets *[]sdk.Target) {
-			for i, target := range *targets {
-				if t.RefID == target.RefID {
-					(*targets)[i] = *t
-					return
-				}
-			}
-			(*targets) = append((*targets), *t)
-		}
-		setTarget(target, targets)
-		b, err := json.Marshal(targets)
-		if err != nil {
-			return err
-		}
-		targetsMap := &[]map[string]interface{}{}
-		err = json.Unmarshal(b, targetsMap)
-		if err != nil {
-			return err
-		}
-		(*panel.CustomPanel)["targets"] = *targetsMap
-		return nil
-	}
-	panel.SetTarget(target)
-	return nil
 }
 
 func getCustomTargets(customPanel *sdk.CustomPanel) (*[]sdk.Target, error) {
@@ -150,6 +119,27 @@ func getCustomTargets(customPanel *sdk.CustomPanel) (*[]sdk.Target, error) {
 		return nil, fmt.Errorf("could not unmarshal to target: %w", err)
 	}
 	return targets, nil
+}
+
+func overrideTarget(panel *sdk.Panel, targets []sdk.Target) error {
+	if panel.CustomPanel != nil {
+		b, err := json.Marshal(targets)
+		if err != nil {
+			return err
+		}
+		targetsMap := &[]map[string]interface{}{}
+		err = json.Unmarshal(b, targetsMap)
+		if err != nil {
+			return err
+		}
+		(*panel.CustomPanel)["targets"] = *targetsMap
+		return nil
+	}
+	panel.ResetTargets()
+	for i := range targets {
+		panel.AddTarget(&targets[i])
+	}
+	return nil
 }
 
 func appendVariables(exprStr string, tplVars []sdk.TemplateVar) (string, error) {

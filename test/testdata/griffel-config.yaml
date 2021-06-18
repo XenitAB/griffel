@@ -1,0 +1,20 @@
+patch:
+  datasource:
+    name: DS_PROMETHEUS
+    label: Datasource
+    regex: global
+    hide: true
+  variables:
+    - name: tenant_id
+      label: tenant
+      query: "label_values(up, tenant_id)"
+    - name: environment
+      label: environment
+      query: "label_values(up{tenant_id=~\"$tenant_id\"}, environment)"
+dashboards:
+  - name: "k8s-resources-pod-generated"
+    source:
+      kind: "Path"
+      value: "k8s-resources-pod.json"
+    destination:
+      format: "JSON"
