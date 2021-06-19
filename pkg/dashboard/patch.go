@@ -86,7 +86,10 @@ func patchPanels(panels []*sdk.Panel, tplVars []sdk.TemplateVar) ([]*sdk.Panel, 
 			target.Expr = expr
 			newTargets = append(newTargets, target)
 		}
-		overrideTarget(panels[i], newTargets)
+		err = overrideTarget(panels[i], newTargets)
+		if err != nil {
+			return nil, err
+		}
 	}
 	return panels, nil
 }
@@ -122,7 +125,8 @@ func getCustomTargets(customPanel *sdk.CustomPanel) (*[]sdk.Target, error) {
 }
 
 func overrideTarget(panel *sdk.Panel, targets []sdk.Target) error {
-	if panel.CustomPanel != nil {
+	switch panel.OfType {
+	case sdk.CustomType:
 		b, err := json.Marshal(targets)
 		if err != nil {
 			return err
@@ -132,11 +136,10 @@ func overrideTarget(panel *sdk.Panel, targets []sdk.Target) error {
 		if err != nil {
 			return err
 		}
-		(*panel.CustomPanel)["targets"] = *targetsMap
-		return nil
-	}
-
-	switch panel.OfType {
+		customPanel := *panel.CustomPanel
+		customPanel["targets"] = *targetsMap
+		panel.CustomPanel = &customPanel
+		fmt.Println(panel.BarGaugePanel)
 	case sdk.GraphType:
 		panel.GraphPanel.Targets = targets
 	case sdk.SinglestatType:
