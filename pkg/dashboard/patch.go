@@ -139,7 +139,6 @@ func overrideTarget(panel *sdk.Panel, targets []sdk.Target) error {
 		customPanel := *panel.CustomPanel
 		customPanel["targets"] = *targetsMap
 		panel.CustomPanel = &customPanel
-		fmt.Println(panel.BarGaugePanel)
 	case sdk.GraphType:
 		panel.GraphPanel.Targets = targets
 	case sdk.SinglestatType:

@@ -50,25 +50,27 @@ func Patch(fs afero.Fs, cfg *config.Config) error {
 		if err != nil {
 			return err
 		}
-
+		if dash.Patch.Title != "" {
+			board.Title = dash.Patch.Title
+		}
+		if len(dash.Patch.Tags) > 0 {
+			board.Tags = dash.Patch.Tags
+		}
 		templating, err := patchTemplating(board.Templating, tplVars, datasource)
 		if err != nil {
 			return err
 		}
 		board.Templating = templating
-
 		panels, err := patchPanels(board.Panels, tplVars)
 		if err != nil {
 			return err
 		}
 		board.Panels = panels
-
 		rows, err := patchRows(board.Rows, tplVars)
 		if err != nil {
 			return err
 		}
 		board.Rows = rows
-
 		err = writeDashboard(fs, dash.Destination.Directory, dash.Destination.Format, dash.Name, board)
 		if err != nil {
 			return err

@@ -7,16 +7,6 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-type Config struct {
-	Dashboards []Dashboard    `yaml:"dashboards"`
-	Patch      DashboardPatch `yaml:"patch"`
-}
-
-type DashboardPatch struct {
-	Variables  []DashboardVariable  `yaml:"variables"`
-	Datasource *DashboardDatasource `yaml:"datasource"`
-}
-
 type DashboardDatasource struct {
 	Name  string `yaml:"name"`
 	Label string `yaml:"label"`
@@ -30,11 +20,27 @@ type DashboardVariable struct {
 	Query string `yaml:"query"`
 }
 
+type GlobalDashboardPatch struct {
+	Variables  []DashboardVariable  `yaml:"variables"`
+	Datasource *DashboardDatasource `yaml:"datasource"`
+}
+
+type DashboardPatch struct {
+	Title string   `yaml:"title"`
+	Tags  []string `yaml:"tags"`
+}
+
 type Dashboard struct {
 	Name        string               `yaml:"name"`
 	Format      string               `yaml:"format"`
 	Source      DashboardSource      `yaml:"source"`
 	Destination DashboardDestination `yaml:"destination"`
+	Patch       DashboardPatch       `yaml:"patch"`
+}
+
+type Config struct {
+	Dashboards []Dashboard          `yaml:"dashboards"`
+	Patch      GlobalDashboardPatch `yaml:"patch"`
 }
 
 type SourceKind string
