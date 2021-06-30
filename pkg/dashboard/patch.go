@@ -159,8 +159,8 @@ func appendVariables(exprStr string, tplVars []sdk.TemplateVar) (string, error) 
 	if exprStr == "" {
 		return "", errors.New("expression string cannot be empty")
 	}
-	exprStr, replaceCache := replaceInterval(exprStr)
-	expr, err := metricsql.Parse(exprStr)
+	replacedExprStr, replaceCache := replaceInterval(exprStr)
+	expr, err := metricsql.Parse(replacedExprStr)
 	if err != nil {
 		return "", fmt.Errorf("could not parse promql: %w", err)
 	}
@@ -177,10 +177,13 @@ func appendVariables(exprStr string, tplVars []sdk.TemplateVar) (string, error) 
 	// TODO (Philip):
 	// Need to handle label_values as a special case as
 	// to not apply label filter to all parameters
-	if strings.HasPrefix(exprStr, "label_values(") {
+	if strings.HasPrefix(replacedExprStr, "label_values(") {
 		funcExpr := expr.(*metricsql.FuncExpr)
 		if len(funcExpr.Args) == 0 {
 			return "", errors.New("label_value cannot have zero arguments")
+		}
+		if len(funcExpr.Args) == 1 {
+			return exprStr, nil
 		}
 		metricExpr := funcExpr.Args[0].(*metricsql.MetricExpr)
 		metricExpr.LabelFilters = append(metricExpr.LabelFilters, labelFilters...)
