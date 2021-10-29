@@ -30,7 +30,7 @@ func patchTemplating(templating sdk.Templating, tplVars []sdk.TemplateVar, datas
 			newList = append(newList, template)
 			continue
 		}
-		expr, err := appendVariables(template.Query, tplVars)
+		expr, err := appendVariables(template.Query.(string), tplVars)
 		if err != nil {
 			return sdk.Templating{}, err
 		}
