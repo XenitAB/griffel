@@ -47,8 +47,8 @@ type SourceKind string
 
 const (
 	SourceKindGrafanaLabs SourceKind = "GrafanaLabs"
-	SourceKindURL                    = "URL"
-	SourceKindPath                   = "Path"
+	SourceKindURL         SourceKind = "URL"
+	SourceKindPath        SourceKind = "Path"
 )
 
 type DashboardSource struct {
@@ -60,7 +60,7 @@ type OutputFormat string
 
 const (
 	OutputFormatJson       OutputFormat = "JSON"
-	OutputFormatKubernetes              = "Kubernetes"
+	OutputFormatKubernetes OutputFormat = "Kubernetes"
 )
 
 type DashboardDestination struct {

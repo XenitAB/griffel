@@ -10,6 +10,7 @@ import (
 
 	"github.com/VictoriaMetrics/metricsql"
 	"github.com/grafana-tools/sdk"
+	"github.com/xenitab/griffel/pkg/util"
 )
 
 func patchTemplating(templating sdk.Templating, tplVars []sdk.TemplateVar, datasource *sdk.TemplateVar) (sdk.Templating, error) {
@@ -20,6 +21,7 @@ func patchTemplating(templating sdk.Templating, tplVars []sdk.TemplateVar, datas
 	}
 	newList = append(newList, tplVars...)
 
+	// nolint:gocritic // can't affect SDK
 	for _, template := range templating.List {
 		// Remove datasource if datasource override is set
 		if template.Type == "datasource" && datasource != nil {
@@ -43,29 +45,34 @@ func patchTemplating(templating sdk.Templating, tplVars []sdk.TemplateVar, datas
 
 func patchRows(rows []*sdk.Row, tplVars []sdk.TemplateVar) ([]*sdk.Row, error) {
 	for i, row := range rows {
-		panels, err := patchPanels(toPanelPointerSlice(row.Panels), tplVars)
+		panelPointers := util.PanelPointerSlice(row.Panels)
+		panels, err := patchPanels(panelPointers, tplVars)
 		if err != nil {
 			return nil, err
 		}
-		rows[i].Panels = fromPanelPointerSlice(panels)
+		rows[i].Panels = util.PanelSlice(panels)
 	}
 	return rows, nil
 }
 
+// nolint:gocognit // skip
 func patchPanels(panels []*sdk.Panel, tplVars []sdk.TemplateVar) ([]*sdk.Panel, error) {
-	ds := "${DS_PROMETHEUS}"
 	for i, panel := range panels {
-		panels[i].Datasource = &ds
+		// Override datasource for panel
+		panels[i].Datasource = util.StringPointer("${DS_PROMETHEUS}")
 
+		// If panel is a row iterate recurse through panels
 		if panel.RowPanel != nil && len(panel.RowPanel.Panels) > 0 {
-			rowPanels, err := patchPanels(toPanelPointerSlice(panel.RowPanel.Panels), tplVars)
+			panelPointers := util.PanelPointerSlice(panel.RowPanel.Panels)
+			rowPanels, err := patchPanels(panelPointers, tplVars)
 			if err != nil {
 				return nil, err
 			}
-			panels[i].RowPanel.Panels = fromPanelPointerSlice(rowPanels)
+			panels[i].RowPanel.Panels = util.PanelSlice(rowPanels)
 			continue
 		}
 
+		// Get all the targes (queries) for the panel
 		targets, err := getTargets(panel)
 		if err != nil {
 			return nil, err
@@ -74,6 +81,9 @@ func patchPanels(panels []*sdk.Panel, tplVars []sdk.TemplateVar) ([]*sdk.Panel, 
 			continue
 		}
 		newTargets := []sdk.Target{}
+
+		// Append variables to all of the targets
+		// nolint:gocritic // can't affect SDK
 		for _, target := range *targets {
 			// Expr is only set for Prometheus targets
 			if target.Expr == "" {
@@ -86,6 +96,8 @@ func patchPanels(panels []*sdk.Panel, tplVars []sdk.TemplateVar) ([]*sdk.Panel, 
 			target.Expr = expr
 			newTargets = append(newTargets, target)
 		}
+
+		// Write the targes back to the panels
 		err = overrideTarget(panels[i], newTargets)
 		if err != nil {
 			return nil, err
@@ -125,6 +137,7 @@ func getCustomTargets(customPanel *sdk.CustomPanel) (*[]sdk.Target, error) {
 }
 
 func overrideTarget(panel *sdk.Panel, targets []sdk.Target) error {
+	// nolint:exhaustive // only want to override panels with targets
 	switch panel.OfType {
 	case sdk.CustomType:
 		b, err := json.Marshal(targets)
@@ -151,6 +164,8 @@ func overrideTarget(panel *sdk.Panel, targets []sdk.Target) error {
 		panel.BarGaugePanel.Targets = targets
 	case sdk.HeatmapType:
 		panel.HeatmapPanel.Targets = targets
+	default:
+		break
 	}
 	return nil
 }
@@ -166,6 +181,7 @@ func appendVariables(exprStr string, tplVars []sdk.TemplateVar) (string, error) 
 	}
 
 	labelFilters := []metricsql.LabelFilter{}
+	// nolint:gocritic // can't affect SDK
 	for _, tplVar := range tplVars {
 		labelFilters = append(labelFilters, metricsql.LabelFilter{
 			Label:    tplVar.Name, // no this is not wrong
@@ -178,14 +194,20 @@ func appendVariables(exprStr string, tplVars []sdk.TemplateVar) (string, error) 
 	// Need to handle label_values as a special case as
 	// to not apply label filter to all parameters
 	if strings.HasPrefix(replacedExprStr, "label_values(") {
-		funcExpr := expr.(*metricsql.FuncExpr)
+		funcExpr, ok := expr.(*metricsql.FuncExpr)
+		if !ok {
+			return "", errors.New("expr is not a function")
+		}
 		if len(funcExpr.Args) == 0 {
 			return "", errors.New("label_value cannot have zero arguments")
 		}
 		if len(funcExpr.Args) == 1 {
 			return exprStr, nil
 		}
-		metricExpr := funcExpr.Args[0].(*metricsql.MetricExpr)
+		metricExpr, ok := funcExpr.Args[0].(*metricsql.MetricExpr)
+		if !ok {
+			return "", errors.New("expr is not a metrics expression")
+		}
 		metricExpr.LabelFilters = append(metricExpr.LabelFilters, labelFilters...)
 		return string(expr.AppendString(nil)), nil
 	}
@@ -198,22 +220,6 @@ func appendVariables(exprStr string, tplVars []sdk.TemplateVar) (string, error) 
 	})
 	result := unReplaceInterval(string(expr.AppendString(nil)), replaceCache)
 	return result, nil
-}
-
-func toPanelPointerSlice(panels []sdk.Panel) []*sdk.Panel {
-	newPanels := []*sdk.Panel{}
-	for i := range panels {
-		newPanels = append(newPanels, &panels[i])
-	}
-	return newPanels
-}
-
-func fromPanelPointerSlice(panels []*sdk.Panel) []sdk.Panel {
-	newPanels := []sdk.Panel{}
-	for _, p := range panels {
-		newPanels = append(newPanels, *p)
-	}
-	return newPanels
 }
 
 // These two functions are dirty but a quick work around until I can figure
@@ -231,6 +237,7 @@ func replaceInterval(expr string) (string, map[string]string) {
 	cache := map[string]string{}
 	result := expr
 	for _, v := range variables {
+		// nolint:gosec // security is not an issue for this as the value is temporary
 		duration := fmt.Sprintf("%vm", rand.Int())
 		cache[duration] = v
 		result = strings.ReplaceAll(result, v, duration)

@@ -58,7 +58,10 @@ func writeKubernetes(fs afero.Fs, path string, name string, board *sdk.Board) er
 			Json: string(b),
 		},
 	}
-	grafanav1alpha1.AddToScheme(scheme.Scheme)
+	err = grafanav1alpha1.AddToScheme(scheme.Scheme)
+	if err != nil {
+		return fmt.Errorf("could not add grafana operator to scheme: %w", err)
+	}
 	opt := k8sjson.SerializerOptions{
 		Yaml: true,
 	}

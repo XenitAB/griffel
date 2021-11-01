@@ -7,20 +7,19 @@ import (
 	"github.com/spf13/afero"
 
 	"github.com/xenitab/griffel/pkg/config"
+	"github.com/xenitab/griffel/pkg/util"
 )
 
 func Patch(fs afero.Fs, cfg *config.Config) error {
-	refresh := int64(1)
-	ds := "${DS_PROMETHEUS}"
-
 	tplVars := []sdk.TemplateVar{}
+	// nolint:gocritic // skip
 	for _, template := range cfg.Patch.Variables {
 		tplVars = append(tplVars, sdk.TemplateVar{
 			Name:       template.Name,
 			Label:      template.Label,
 			IncludeAll: true,
-			Refresh:    sdk.BoolInt{Value: &refresh},
-			Datasource: &ds,
+			Refresh:    sdk.BoolInt{Value: util.Int64Pointer(1)},
+			Datasource: util.StringPointer("${DS_PROMETHEUS}"),
 			Type:       "query",
 			Query:      template.Query,
 		})
@@ -39,10 +38,11 @@ func Patch(fs afero.Fs, cfg *config.Config) error {
 			Query:   "prometheus",
 			Regex:   cfg.Patch.Datasource.Regex,
 			Hide:    hide,
-			Refresh: sdk.BoolInt{Value: &refresh},
+			Refresh: sdk.BoolInt{Value: util.Int64Pointer(1)},
 		}
 	}
 
+	// nolint:gocritic // skip
 	for _, dash := range cfg.Dashboards {
 		fmt.Println(dash.Name)
 

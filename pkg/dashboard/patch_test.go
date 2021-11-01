@@ -89,7 +89,8 @@ func TestPatchPanel(t *testing.T) {
 	require.Equal(t, "sum(keycloak_registrations{instance=\"$instance\", foo=~\"$foo\"})", newPanels[0].GraphPanel.Targets[2].Expr)
 
 	newCustomPanel := *newPanels[1].CustomPanel
-	newTargets := newCustomPanel["targets"].([]map[string]interface{})
+	newTargets, ok := newCustomPanel["targets"].([]map[string]interface{})
+	require.True(t, ok, "value not of expected type")
 	require.Equal(t, "sum(keycloak_registrations{instance=\"$instance\", foo=~\"$foo\"})", newTargets[0]["expr"])
 }
 
@@ -100,8 +101,10 @@ func TestAppendFilterBasic(t *testing.T) {
 			Label: "Foo",
 		},
 	}
+	// nolint:lll // ignore
 	exprString, err := appendVariables("sum(gotk_reconcile_condition{namespace=~\"$namespace\", type=\"Ready\", status=\"False\", kind=~\"Kustomization|HelmRelease\"})", tplVars)
 	require.NoError(t, err)
+	// nolint:lll // ignore
 	require.Equal(t, "sum(gotk_reconcile_condition{namespace=~\"$namespace\", type=\"Ready\", status=\"False\", kind=~\"Kustomization|HelmRelease\", foo=~\"$foo\"})", exprString)
 }
 
@@ -124,7 +127,9 @@ func TestAppendFilterWithVariables(t *testing.T) {
 			Label: "Foo",
 		},
 	}
+	// nolint:lll // ignore
 	exprString, err := appendVariables("sort_desc(sum(irate(container_network_transmit_packets_dropped_total{cluster=\"$cluster\",namespace=~\".+\"}[$__interval:$resolution])) by (namespace))", tplVars)
 	require.NoError(t, err)
+	// nolint:lll // ignore
 	require.Equal(t, "sort_desc(sum(irate(container_network_transmit_packets_dropped_total{cluster=\"$cluster\", namespace=~\".+\", foo=~\"$foo\"}[$__interval:$resolution])) by (namespace))", exprString)
 }
