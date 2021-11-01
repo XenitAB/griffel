@@ -1,3 +1,5 @@
+all: fmt vet lint test build
+
 fmt:
 	go fmt ./...
 
