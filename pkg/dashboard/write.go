@@ -8,10 +8,11 @@ import (
 	grafanav1alpha1 "github.com/grafana-operator/grafana-operator/v4/api/integreatly/v1alpha1"
 	"github.com/grafana-tools/sdk"
 	"github.com/spf13/afero"
-	"github.com/xenitab/griffel/pkg/config"
 	"k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset/scheme"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	k8sjson "k8s.io/apimachinery/pkg/runtime/serializer/json"
+
+	"github.com/xenitab/griffel/pkg/config"
 )
 
 func writeDashboard(fs afero.Fs, directory string, format config.OutputFormat, name string, board *sdk.Board) error {
