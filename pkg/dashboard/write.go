@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"path/filepath"
 
+	grafanav1alpha1 "github.com/grafana-operator/grafana-operator/v4/api/integreatly/v1alpha1"
 	"github.com/grafana-tools/sdk"
-	grafanav1alpha1 "github.com/integr8ly/grafana-operator/v3/pkg/apis/integreatly/v1alpha1"
 	"github.com/spf13/afero"
 	"github.com/xenitab/griffel/pkg/config"
 	"k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset/scheme"
@@ -48,7 +48,7 @@ func writeKubernetes(fs afero.Fs, path string, name string, board *sdk.Board) er
 	}
 	dashboard := grafanav1alpha1.GrafanaDashboard{
 		TypeMeta: metav1.TypeMeta{
-			APIVersion: grafanav1alpha1.SchemeGroupVersion.String(),
+			APIVersion: grafanav1alpha1.GroupVersion.String(),
 			Kind:       "GrafanaDashboard",
 		},
 		ObjectMeta: metav1.ObjectMeta{

@@ -88,7 +88,7 @@ spec:
         "time_options": null
       }
     }
-  jsonnet: ""
+status: {}
 `
 
 func TestWriteOperator(t *testing.T) {
