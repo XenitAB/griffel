@@ -17,11 +17,7 @@ import (
 // as the sdk implementation does not support it.
 func GetTargets(panel *sdk.Panel) (*[]sdk.Target, error) {
 	if panel.CustomPanel == nil {
-		targets := panel.GetTargets()
-		if targets == nil {
-			return nil, errors.New("targets for panel was not found")
-		}
-		return targets, nil
+		return panel.GetTargets(), nil
 	}
 
 	// TODO (Philip): There has to be a simpler way of casting to target list
