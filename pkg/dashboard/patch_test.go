@@ -36,7 +36,7 @@ func TestPatchTemplating(t *testing.T) {
 	require.Equal(t, "bar", newTemplating.List[0].Name)
 	require.Equal(t, "query_2", newTemplating.List[0].Query)
 	require.Equal(t, "DS_PROMETHEUS", newTemplating.List[1].Name)
-	require.Equal(t, "", newTemplating.List[1].Query)
+	require.Nil(t, newTemplating.List[1].Query)
 	require.Equal(t, "foo", newTemplating.List[2].Name)
 	require.Equal(t, "query_1{bar=~\"$bar\"}", newTemplating.List[2].Query)
 }
