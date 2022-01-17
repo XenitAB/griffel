@@ -79,24 +79,24 @@
           "steppedLine": false,
           "targets": [
             {
-              "refId": "A",
-              "expr": "sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{namespace=\"$namespace\", pod=\"$pod\", cluster_name=\"$cluster\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}) by (container)",
+              "refId": "",
+              "expr": "sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{namespace=\"$namespace\", pod=\"$pod\", cluster=\"$cluster\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}) by (container)",
               "intervalFactor": 2,
               "step": 10,
               "legendFormat": "{{container}}",
               "format": "time_series"
             },
             {
-              "refId": "B",
-              "expr": "sum(kube_pod_container_resource_requests{cluster_name=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", resource=\"cpu\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"})",
+              "refId": "",
+              "expr": "sum(kube_pod_container_resource_requests{cluster=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", resource=\"cpu\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"})",
               "intervalFactor": 2,
               "step": 10,
               "legendFormat": "requests",
               "format": "time_series"
             },
             {
-              "refId": "C",
-              "expr": "sum(kube_pod_container_resource_limits{cluster_name=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", resource=\"cpu\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"})",
+              "refId": "",
+              "expr": "sum(kube_pod_container_resource_limits{cluster=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", resource=\"cpu\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"})",
               "intervalFactor": 2,
               "step": 10,
               "legendFormat": "limits",
@@ -105,7 +105,8 @@
           ],
           "tooltip": {
             "shared": false,
-            "value_type": "individual"
+            "value_type": "individual",
+            "sort": 2
           },
           "xaxis": {
             "format": "",
@@ -177,8 +178,8 @@
           "steppedLine": false,
           "targets": [
             {
-              "refId": "A",
-              "expr": "sum(increase(container_cpu_cfs_throttled_periods_total{namespace=\"$namespace\", pod=\"$pod\", container!=\"\", cluster_name=\"$cluster\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[5m])) by (container) / sum(increase(container_cpu_cfs_periods_total{namespace=\"$namespace\", pod=\"$pod\", container!=\"\", cluster_name=\"$cluster\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[5m])) by (container)",
+              "refId": "",
+              "expr": "sum(increase(container_cpu_cfs_throttled_periods_total{namespace=\"$namespace\", pod=\"$pod\", container!=\"\", cluster=\"$cluster\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[5m])) by (container) / sum(increase(container_cpu_cfs_periods_total{namespace=\"$namespace\", pod=\"$pod\", container!=\"\", cluster=\"$cluster\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[5m])) by (container)",
               "intervalFactor": 2,
               "step": 10,
               "legendFormat": "{{container}}",
@@ -197,7 +198,8 @@
           ],
           "tooltip": {
             "shared": false,
-            "value_type": "individual"
+            "value_type": "individual",
+            "sort": 2
           },
           "xaxis": {
             "format": "",
@@ -336,7 +338,7 @@
           "targets": [
             {
               "refId": "A",
-              "expr": "sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{cluster_name=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}) by (container)",
+              "expr": "sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{cluster=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}) by (container)",
               "intervalFactor": 2,
               "step": 10,
               "instant": true,
@@ -344,7 +346,7 @@
             },
             {
               "refId": "B",
-              "expr": "sum(kube_pod_container_resource_requests{cluster_name=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", resource=\"cpu\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}) by (container)",
+              "expr": "sum(cluster:namespace:pod_cpu:active:kube_pod_container_resource_requests{cluster=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}) by (container)",
               "intervalFactor": 2,
               "step": 10,
               "instant": true,
@@ -352,7 +354,7 @@
             },
             {
               "refId": "C",
-              "expr": "sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{cluster_name=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}) by (container) / sum(kube_pod_container_resource_requests{cluster_name=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", resource=\"cpu\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}) by (container)",
+              "expr": "sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{cluster=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}) by (container) / sum(cluster:namespace:pod_cpu:active:kube_pod_container_resource_requests{cluster=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}) by (container)",
               "intervalFactor": 2,
               "step": 10,
               "instant": true,
@@ -360,7 +362,7 @@
             },
             {
               "refId": "D",
-              "expr": "sum(kube_pod_container_resource_limits{cluster_name=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", resource=\"cpu\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}) by (container)",
+              "expr": "sum(cluster:namespace:pod_cpu:active:kube_pod_container_resource_limits{cluster=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}) by (container)",
               "intervalFactor": 2,
               "step": 10,
               "instant": true,
@@ -368,7 +370,7 @@
             },
             {
               "refId": "E",
-              "expr": "sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{cluster_name=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}) by (container) / sum(kube_pod_container_resource_limits{cluster_name=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", resource=\"cpu\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}) by (container)",
+              "expr": "sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{cluster=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}) by (container) / sum(cluster:namespace:pod_cpu:active:kube_pod_container_resource_limits{cluster=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}) by (container)",
               "intervalFactor": 2,
               "step": 10,
               "instant": true,
@@ -448,24 +450,24 @@
           "steppedLine": false,
           "targets": [
             {
-              "refId": "A",
-              "expr": "sum(container_memory_working_set_bytes{cluster_name=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", container!=\"\", image!=\"\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}) by (container)",
+              "refId": "",
+              "expr": "sum(container_memory_working_set_bytes{cluster=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", container!=\"\", image!=\"\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}) by (container)",
               "intervalFactor": 2,
               "step": 10,
               "legendFormat": "{{container}}",
               "format": "time_series"
             },
             {
-              "refId": "B",
-              "expr": "sum(kube_pod_container_resource_requests{cluster_name=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", resource=\"memory\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"})",
+              "refId": "",
+              "expr": "sum(kube_pod_container_resource_requests{cluster=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", resource=\"memory\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"})",
               "intervalFactor": 2,
               "step": 10,
               "legendFormat": "requests",
               "format": "time_series"
             },
             {
-              "refId": "C",
-              "expr": "sum(kube_pod_container_resource_limits{cluster_name=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", resource=\"memory\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"})",
+              "refId": "",
+              "expr": "sum(kube_pod_container_resource_limits{cluster=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", resource=\"memory\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"})",
               "intervalFactor": 2,
               "step": 10,
               "legendFormat": "limits",
@@ -474,7 +476,8 @@
           ],
           "tooltip": {
             "shared": false,
-            "value_type": "individual"
+            "value_type": "individual",
+            "sort": 2
           },
           "xaxis": {
             "format": "",
@@ -648,7 +651,7 @@
           "targets": [
             {
               "refId": "A",
-              "expr": "sum(container_memory_working_set_bytes{cluster_name=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", container!=\"\", image!=\"\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}) by (container)",
+              "expr": "sum(container_memory_working_set_bytes{cluster=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", container!=\"\", image!=\"\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}) by (container)",
               "intervalFactor": 2,
               "step": 10,
               "instant": true,
@@ -656,7 +659,7 @@
             },
             {
               "refId": "B",
-              "expr": "sum(kube_pod_container_resource_requests{cluster_name=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", resource=\"memory\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}) by (container)",
+              "expr": "sum(cluster:namespace:pod_memory:active:kube_pod_container_resource_requests{cluster=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}) by (container)",
               "intervalFactor": 2,
               "step": 10,
               "instant": true,
@@ -664,7 +667,7 @@
             },
             {
               "refId": "C",
-              "expr": "sum(container_memory_working_set_bytes{cluster_name=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", image!=\"\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}) by (container) / sum(kube_pod_container_resource_requests{cluster_name=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", resource=\"memory\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}) by (container)",
+              "expr": "sum(container_memory_working_set_bytes{cluster=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", image!=\"\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}) by (container) / sum(cluster:namespace:pod_memory:active:kube_pod_container_resource_requests{cluster=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}) by (container)",
               "intervalFactor": 2,
               "step": 10,
               "instant": true,
@@ -672,7 +675,7 @@
             },
             {
               "refId": "D",
-              "expr": "sum(kube_pod_container_resource_limits{cluster_name=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", resource=\"memory\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}) by (container)",
+              "expr": "sum(cluster:namespace:pod_memory:active:kube_pod_container_resource_limits{cluster=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}) by (container)",
               "intervalFactor": 2,
               "step": 10,
               "instant": true,
@@ -680,7 +683,7 @@
             },
             {
               "refId": "E",
-              "expr": "sum(container_memory_working_set_bytes{cluster_name=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", container!=\"\", image!=\"\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}) by (container) / sum(kube_pod_container_resource_limits{cluster_name=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", resource=\"memory\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}) by (container)",
+              "expr": "sum(container_memory_working_set_bytes{cluster=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", container!=\"\", image!=\"\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}) by (container) / sum(cluster:namespace:pod_memory:active:kube_pod_container_resource_limits{cluster=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}) by (container)",
               "intervalFactor": 2,
               "step": 10,
               "instant": true,
@@ -688,7 +691,7 @@
             },
             {
               "refId": "F",
-              "expr": "sum(container_memory_rss{cluster_name=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", container!=\"\", container!=\"POD\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}) by (container)",
+              "expr": "sum(container_memory_rss{cluster=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", container!=\"\", container!=\"POD\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}) by (container)",
               "intervalFactor": 2,
               "step": 10,
               "instant": true,
@@ -696,7 +699,7 @@
             },
             {
               "refId": "G",
-              "expr": "sum(container_memory_cache{cluster_name=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", container!=\"\", container!=\"POD\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}) by (container)",
+              "expr": "sum(container_memory_cache{cluster=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", container!=\"\", container!=\"POD\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}) by (container)",
               "intervalFactor": 2,
               "step": 10,
               "instant": true,
@@ -704,7 +707,7 @@
             },
             {
               "refId": "H",
-              "expr": "sum(container_memory_swap{cluster_name=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", container!=\"\", container!=\"POD\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}) by (container)",
+              "expr": "sum(container_memory_swap{cluster=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", container!=\"\", container!=\"POD\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}) by (container)",
               "intervalFactor": 2,
               "step": 10,
               "instant": true,
@@ -764,8 +767,8 @@
           "steppedLine": false,
           "targets": [
             {
-              "refId": "A",
-              "expr": "sum(irate(container_network_receive_bytes_total{cluster_name=\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[$__rate_interval])) by (pod)",
+              "refId": "",
+              "expr": "sum(irate(container_network_receive_bytes_total{cluster=\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[$__rate_interval])) by (pod)",
               "intervalFactor": 2,
               "step": 10,
               "legendFormat": "{{pod}}",
@@ -774,7 +777,8 @@
           ],
           "tooltip": {
             "shared": false,
-            "value_type": "individual"
+            "value_type": "individual",
+            "sort": 2
           },
           "xaxis": {
             "format": "",
@@ -836,8 +840,8 @@
           "steppedLine": false,
           "targets": [
             {
-              "refId": "A",
-              "expr": "sum(irate(container_network_transmit_bytes_total{cluster_name=\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[$__rate_interval])) by (pod)",
+              "refId": "",
+              "expr": "sum(irate(container_network_transmit_bytes_total{cluster=\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[$__rate_interval])) by (pod)",
               "intervalFactor": 2,
               "step": 10,
               "legendFormat": "{{pod}}",
@@ -846,7 +850,8 @@
           ],
           "tooltip": {
             "shared": false,
-            "value_type": "individual"
+            "value_type": "individual",
+            "sort": 2
           },
           "xaxis": {
             "format": "",
@@ -918,8 +923,8 @@
           "steppedLine": false,
           "targets": [
             {
-              "refId": "A",
-              "expr": "sum(irate(container_network_receive_packets_total{cluster_name=\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[$__rate_interval])) by (pod)",
+              "refId": "",
+              "expr": "sum(irate(container_network_receive_packets_total{cluster=\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[$__rate_interval])) by (pod)",
               "intervalFactor": 2,
               "step": 10,
               "legendFormat": "{{pod}}",
@@ -928,7 +933,8 @@
           ],
           "tooltip": {
             "shared": false,
-            "value_type": "individual"
+            "value_type": "individual",
+            "sort": 2
           },
           "xaxis": {
             "format": "",
@@ -937,7 +943,7 @@
           },
           "yaxes": [
             {
-              "format": "Bps",
+              "format": "pps",
               "logBase": 1,
               "min": 0,
               "show": true
@@ -990,8 +996,8 @@
           "steppedLine": false,
           "targets": [
             {
-              "refId": "A",
-              "expr": "sum(irate(container_network_transmit_packets_total{cluster_name=\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[$__rate_interval])) by (pod)",
+              "refId": "",
+              "expr": "sum(irate(container_network_transmit_packets_total{cluster=\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[$__rate_interval])) by (pod)",
               "intervalFactor": 2,
               "step": 10,
               "legendFormat": "{{pod}}",
@@ -1000,7 +1006,8 @@
           ],
           "tooltip": {
             "shared": false,
-            "value_type": "individual"
+            "value_type": "individual",
+            "sort": 2
           },
           "xaxis": {
             "format": "",
@@ -1009,7 +1016,7 @@
           },
           "yaxes": [
             {
-              "format": "Bps",
+              "format": "pps",
               "logBase": 1,
               "min": 0,
               "show": true
@@ -1072,8 +1079,8 @@
           "steppedLine": false,
           "targets": [
             {
-              "refId": "A",
-              "expr": "sum(irate(container_network_receive_packets_dropped_total{cluster_name=\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[$__rate_interval])) by (pod)",
+              "refId": "",
+              "expr": "sum(irate(container_network_receive_packets_dropped_total{cluster=\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[$__rate_interval])) by (pod)",
               "intervalFactor": 2,
               "step": 10,
               "legendFormat": "{{pod}}",
@@ -1082,7 +1089,8 @@
           ],
           "tooltip": {
             "shared": false,
-            "value_type": "individual"
+            "value_type": "individual",
+            "sort": 2
           },
           "xaxis": {
             "format": "",
@@ -1091,7 +1099,7 @@
           },
           "yaxes": [
             {
-              "format": "Bps",
+              "format": "pps",
               "logBase": 1,
               "min": 0,
               "show": true
@@ -1144,8 +1152,8 @@
           "steppedLine": false,
           "targets": [
             {
-              "refId": "A",
-              "expr": "sum(irate(container_network_transmit_packets_dropped_total{cluster_name=\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[$__rate_interval])) by (pod)",
+              "refId": "",
+              "expr": "sum(irate(container_network_transmit_packets_dropped_total{cluster=\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[$__rate_interval])) by (pod)",
               "intervalFactor": 2,
               "step": 10,
               "legendFormat": "{{pod}}",
@@ -1154,7 +1162,8 @@
           ],
           "tooltip": {
             "shared": false,
-            "value_type": "individual"
+            "value_type": "individual",
+            "sort": 2
           },
           "xaxis": {
             "format": "",
@@ -1163,7 +1172,7 @@
           },
           "yaxes": [
             {
-              "format": "Bps",
+              "format": "pps",
               "logBase": 1,
               "min": 0,
               "show": true
@@ -1201,7 +1210,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "decimals": 0,
+          "decimals": -1,
           "fill": 10,
           "legend": {
             "alignAsTable": false,
@@ -1227,16 +1236,16 @@
           "steppedLine": false,
           "targets": [
             {
-              "refId": "A",
-              "expr": "ceil(sum(rate(container_fs_reads_total{container!=\"\", cluster_name=\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[5m])) by (pod))",
+              "refId": "",
+              "expr": "ceil(sum(rate(container_fs_reads_total{container!=\"\", cluster=\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[5m])) by (pod))",
               "intervalFactor": 2,
               "step": 10,
               "legendFormat": "Reads",
               "format": "time_series"
             },
             {
-              "refId": "B",
-              "expr": "ceil(sum(rate(container_fs_writes_total{container!=\"\", cluster_name=\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[5m])) by (pod))",
+              "refId": "",
+              "expr": "ceil(sum(rate(container_fs_writes_total{container!=\"\", cluster=\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[5m])) by (pod))",
               "intervalFactor": 2,
               "step": 10,
               "legendFormat": "Writes",
@@ -1245,7 +1254,8 @@
           ],
           "tooltip": {
             "shared": false,
-            "value_type": "individual"
+            "value_type": "individual",
+            "sort": 2
           },
           "xaxis": {
             "format": "",
@@ -1307,16 +1317,16 @@
           "steppedLine": false,
           "targets": [
             {
-              "refId": "A",
-              "expr": "sum(rate(container_fs_reads_bytes_total{container!=\"\", cluster_name=\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[5m])) by (pod)",
+              "refId": "",
+              "expr": "sum(rate(container_fs_reads_bytes_total{container!=\"\", cluster=\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[5m])) by (pod)",
               "intervalFactor": 2,
               "step": 10,
               "legendFormat": "Reads",
               "format": "time_series"
             },
             {
-              "refId": "B",
-              "expr": "sum(rate(container_fs_writes_bytes_total{container!=\"\", cluster_name=\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[5m])) by (pod)",
+              "refId": "",
+              "expr": "sum(rate(container_fs_writes_bytes_total{container!=\"\", cluster=\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[5m])) by (pod)",
               "intervalFactor": 2,
               "step": 10,
               "legendFormat": "Writes",
@@ -1325,7 +1335,8 @@
           ],
           "tooltip": {
             "shared": false,
-            "value_type": "individual"
+            "value_type": "individual",
+            "sort": 2
           },
           "xaxis": {
             "format": "",
@@ -1372,7 +1383,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "decimals": 0,
+          "decimals": -1,
           "fill": 10,
           "legend": {
             "alignAsTable": false,
@@ -1398,8 +1409,8 @@
           "steppedLine": false,
           "targets": [
             {
-              "refId": "A",
-              "expr": "ceil(sum(rate(container_fs_reads_total{container!=\"\", cluster_name=\"$cluster\", namespace=~\"$namespace\", pod=\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[5m]) + rate(container_fs_writes_total{container!=\"\", cluster_name=\"$cluster\", namespace=~\"$namespace\", pod=\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[5m])) by (container))",
+              "refId": "",
+              "expr": "ceil(sum(rate(container_fs_reads_total{container!=\"\", cluster=\"$cluster\", namespace=~\"$namespace\", pod=\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[5m]) + rate(container_fs_writes_total{container!=\"\", cluster=\"$cluster\", namespace=~\"$namespace\", pod=\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[5m])) by (container))",
               "intervalFactor": 2,
               "step": 10,
               "legendFormat": "{{container}}",
@@ -1408,7 +1419,8 @@
           ],
           "tooltip": {
             "shared": false,
-            "value_type": "individual"
+            "value_type": "individual",
+            "sort": 2
           },
           "xaxis": {
             "format": "",
@@ -1470,8 +1482,8 @@
           "steppedLine": false,
           "targets": [
             {
-              "refId": "A",
-              "expr": "sum(rate(container_fs_reads_bytes_total{container!=\"\", cluster_name=\"$cluster\", namespace=~\"$namespace\", pod=\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[5m]) + rate(container_fs_writes_bytes_total{container!=\"\", cluster_name=\"$cluster\", namespace=~\"$namespace\", pod=\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[5m])) by (container)",
+              "refId": "",
+              "expr": "sum(rate(container_fs_reads_bytes_total{container!=\"\", cluster=\"$cluster\", namespace=~\"$namespace\", pod=\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[5m]) + rate(container_fs_writes_bytes_total{container!=\"\", cluster=\"$cluster\", namespace=~\"$namespace\", pod=\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[5m])) by (container)",
               "intervalFactor": 2,
               "step": 10,
               "legendFormat": "{{container}}",
@@ -1480,7 +1492,8 @@
           ],
           "tooltip": {
             "shared": false,
-            "value_type": "individual"
+            "value_type": "individual",
+            "sort": 2
           },
           "xaxis": {
             "format": "",
@@ -1541,7 +1554,7 @@
               "pattern": "Value #A",
               "type": "number",
               "colors": [],
-              "decimals": 0,
+              "decimals": -1,
               "thresholds": [],
               "unit": "short",
               "linkTooltip": "Drill down",
@@ -1553,7 +1566,7 @@
               "pattern": "Value #B",
               "type": "number",
               "colors": [],
-              "decimals": 0,
+              "decimals": -1,
               "thresholds": [],
               "unit": "short",
               "linkTooltip": "Drill down",
@@ -1565,7 +1578,7 @@
               "pattern": "Value #C",
               "type": "number",
               "colors": [],
-              "decimals": 0,
+              "decimals": -1,
               "thresholds": [],
               "unit": "short",
               "linkTooltip": "Drill down",
@@ -1634,7 +1647,7 @@
           "targets": [
             {
               "refId": "A",
-              "expr": "sum(rate(container_fs_reads_total{container!=\"\", cluster_name=\"$cluster\", namespace=~\"$namespace\", pod=\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[5m])) by (container)",
+              "expr": "sum(rate(container_fs_reads_total{container!=\"\", cluster=\"$cluster\", namespace=~\"$namespace\", pod=\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[5m])) by (container)",
               "intervalFactor": 2,
               "step": 10,
               "instant": true,
@@ -1642,7 +1655,7 @@
             },
             {
               "refId": "B",
-              "expr": "sum(rate(container_fs_writes_total{container!=\"\", cluster_name=\"$cluster\", namespace=~\"$namespace\", pod=\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[5m])) by (container)",
+              "expr": "sum(rate(container_fs_writes_total{container!=\"\", cluster=\"$cluster\", namespace=~\"$namespace\", pod=\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[5m])) by (container)",
               "intervalFactor": 2,
               "step": 10,
               "instant": true,
@@ -1650,7 +1663,7 @@
             },
             {
               "refId": "C",
-              "expr": "sum(rate(container_fs_reads_total{container!=\"\", cluster_name=\"$cluster\", namespace=~\"$namespace\", pod=\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[5m]) + rate(container_fs_writes_total{container!=\"\", cluster_name=\"$cluster\", namespace=~\"$namespace\", pod=\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[5m])) by (container)",
+              "expr": "sum(rate(container_fs_reads_total{container!=\"\", cluster=\"$cluster\", namespace=~\"$namespace\", pod=\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[5m]) + rate(container_fs_writes_total{container!=\"\", cluster=\"$cluster\", namespace=~\"$namespace\", pod=\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[5m])) by (container)",
               "intervalFactor": 2,
               "step": 10,
               "instant": true,
@@ -1658,7 +1671,7 @@
             },
             {
               "refId": "D",
-              "expr": "sum(rate(container_fs_reads_bytes_total{container!=\"\", cluster_name=\"$cluster\", namespace=~\"$namespace\", pod=\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[5m])) by (container)",
+              "expr": "sum(rate(container_fs_reads_bytes_total{container!=\"\", cluster=\"$cluster\", namespace=~\"$namespace\", pod=\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[5m])) by (container)",
               "intervalFactor": 2,
               "step": 10,
               "instant": true,
@@ -1666,7 +1679,7 @@
             },
             {
               "refId": "E",
-              "expr": "sum(rate(container_fs_writes_bytes_total{container!=\"\", cluster_name=\"$cluster\", namespace=~\"$namespace\", pod=\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[5m])) by (container)",
+              "expr": "sum(rate(container_fs_writes_bytes_total{container!=\"\", cluster=\"$cluster\", namespace=~\"$namespace\", pod=\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[5m])) by (container)",
               "intervalFactor": 2,
               "step": 10,
               "instant": true,
@@ -1674,7 +1687,7 @@
             },
             {
               "refId": "F",
-              "expr": "sum(rate(container_fs_reads_bytes_total{container!=\"\", cluster_name=\"$cluster\", namespace=~\"$namespace\", pod=\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[5m]) + rate(container_fs_writes_bytes_total{container!=\"\", cluster_name=\"$cluster\", namespace=~\"$namespace\", pod=\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[5m])) by (container)",
+              "expr": "sum(rate(container_fs_reads_bytes_total{container!=\"\", cluster=\"$cluster\", namespace=~\"$namespace\", pod=\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[5m]) + rate(container_fs_writes_bytes_total{container!=\"\", cluster=\"$cluster\", namespace=~\"$namespace\", pod=\"$pod\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}[5m])) by (container)",
               "intervalFactor": 2,
               "step": 10,
               "instant": true,
@@ -1763,7 +1776,7 @@
         "allValue": "",
         "multi": false,
         "multiFormat": "",
-        "query": "label_values(kube_pod_info{tenant_id=~\"$tenant_id\", environment=~\"$environment\"}, cluster_name)",
+        "query": "label_values(up{job=\"kube-state-metrics\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}, cluster)",
         "regex": "",
         "current": {
           "text": [
@@ -1786,7 +1799,7 @@
         "allValue": "",
         "multi": false,
         "multiFormat": "",
-        "query": "label_values(kube_pod_info{cluster_name=\"$cluster\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}, namespace)",
+        "query": "label_values(kube_namespace_created{cluster=\"$cluster\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}, namespace)",
         "regex": "",
         "current": {
           "text": [
@@ -1809,7 +1822,7 @@
         "allValue": "",
         "multi": false,
         "multiFormat": "",
-        "query": "label_values(kube_pod_info{cluster_name=\"$cluster\", namespace=\"$namespace\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}, pod)",
+        "query": "label_values(kube_pod_info{cluster=\"$cluster\", namespace=\"$namespace\", tenant_id=~\"$tenant_id\", environment=~\"$environment\"}, pod)",
         "regex": "",
         "current": {
           "text": [

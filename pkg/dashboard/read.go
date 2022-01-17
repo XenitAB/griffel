@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/grafana-tools/sdk"
+
 	"github.com/xenitab/griffel/pkg/config"
 )
 
