@@ -2,6 +2,7 @@ package dashboard
 
 import (
 	"github.com/grafana-tools/sdk"
+
 	"github.com/xenitab/griffel/pkg/util"
 )
 
@@ -81,9 +82,9 @@ func patchPanels(panels []*sdk.Panel, tplVars []sdk.TemplateVar) ([]*sdk.Panel, 
 		if targets == nil {
 			continue
 		}
-		newTargets := []sdk.Target{}
 
 		// Append variables to all of the targets
+		newTargets := []sdk.Target{}
 		// nolint:gocritic // can't affect SDK
 		for _, target := range *targets {
 			// Expr is only set for Prometheus targets
