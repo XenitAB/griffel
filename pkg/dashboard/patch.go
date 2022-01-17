@@ -29,11 +29,15 @@ func patchTemplating(templating sdk.Templating, tplVars []sdk.TemplateVar, datas
 			newList = append(newList, template)
 			continue
 		}
-		expr, err := util.AppendVariables(template.Query.(string), tplVars)
+		query, err := NewQuery(template.Query)
 		if err != nil {
 			return sdk.Templating{}, err
 		}
-		template.Query = expr
+		result, err := query.AppendVariables(tplVars)
+		if err != nil {
+			return sdk.Templating{}, err
+		}
+		template.Query = result
 		newList = append(newList, template)
 	}
 
@@ -90,11 +94,15 @@ func patchPanels(panels []*sdk.Panel, tplVars []sdk.TemplateVar) ([]*sdk.Panel, 
 			if target.Expr == "" {
 				continue
 			}
-			expr, err := util.AppendVariables(target.Expr, tplVars)
+			query, err := NewQuery(target.Expr)
 			if err != nil {
 				return nil, err
 			}
-			target.Expr = expr
+			result, err := query.AppendVariables(tplVars)
+			if err != nil {
+				return nil, err
+			}
+			target.Expr = result.(string)
 			newTargets = append(newTargets, target)
 		}
 

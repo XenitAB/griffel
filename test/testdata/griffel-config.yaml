@@ -18,3 +18,9 @@ dashboards:
       value: "k8s-resources-pod.json"
     destination:
       format: "JSON"
+  - name: "vpa-generated"
+    source:
+      kind: "Path"
+      value: "vpa.json"
+    destination:
+      format: "JSON"
