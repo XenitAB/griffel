@@ -73,6 +73,15 @@ func patchPanels(panels []*sdk.Panel, tplVars []sdk.TemplateVar) ([]*sdk.Panel, 
 			continue
 		}
 
+		// If panel is singlestat convert it to stat
+		if panel.OfType == sdk.SinglestatType {
+			statPanel, err := util.ConvertToStatPanel(panel)
+			if err != nil {
+				return nil, err
+			}
+			panel = statPanel
+		}
+
 		// Get all the targes (queries) for the panel
 		targets, err := util.GetTargets(panel)
 		if err != nil {

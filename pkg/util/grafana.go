@@ -12,6 +12,51 @@ import (
 	"github.com/grafana-tools/sdk"
 )
 
+func ConvertToStatPanel(panel *sdk.Panel) (*sdk.Panel, error) {
+	if panel.OfType != sdk.SinglestatType {
+		return nil, errors.New("can only convert panels of type single stat type")
+	}
+
+	newPanel := sdk.NewStat(panel.Title)
+	newPanel.ID = panel.ID
+	newPanel.Description = panel.Description
+	newPanel.Datasource = panel.Datasource
+	newPanel.Editable = panel.Editable
+	newPanel.Error = panel.Error
+	newPanel.GridPos = panel.GridPos
+	newPanel.Height = panel.Height
+	newPanel.HideTimeOverride = panel.HideTimeOverride
+	newPanel.IsNew = panel.IsNew
+	newPanel.Links = panel.Links
+	newPanel.Renderer = panel.Renderer
+	newPanel.Repeat = panel.Repeat
+	newPanel.RepeatPanelID = panel.RepeatPanelID
+	newPanel.StatPanel = &sdk.StatPanel{
+		Colors:          panel.SinglestatPanel.Colors,
+		ColorValue:      panel.SinglestatPanel.ColorValue,
+		ColorBackground: panel.SinglestatPanel.ColorBackground,
+		Decimals:        panel.SinglestatPanel.Decimals,
+		Format:          panel.SinglestatPanel.Format,
+		Gauge:           panel.SinglestatPanel.Gauge,
+		MappingType:     panel.SinglestatPanel.MappingType,
+		MappingTypes:    panel.SinglestatPanel.MappingTypes,
+		MaxDataPoints:   panel.SinglestatPanel.MaxDataPoints,
+		NullPointMode:   panel.SinglestatPanel.NullPointMode,
+		Postfix:         panel.SinglestatPanel.Postfix,
+		PostfixFontSize: panel.SinglestatPanel.PostfixFontSize,
+		Prefix:          panel.SinglestatPanel.Postfix,
+		PrefixFontSize:  panel.SinglestatPanel.PrefixFontSize,
+		RangeMaps:       panel.SinglestatPanel.RangeMaps,
+		SparkLine:       panel.SinglestatPanel.SparkLine,
+		Targets:         panel.SinglestatPanel.Targets,
+		Thresholds:      panel.SinglestatPanel.Thresholds,
+		ValueFontSize:   panel.SinglestatPanel.ValueFontSize,
+		ValueMaps:       panel.SinglestatPanel.ValueMaps,
+		ValueName:       panel.SinglestatPanel.ValueName,
+	}
+	return newPanel, nil
+}
+
 // GetTargets returns a list of targets for the given panel.
 // Custom logic has to be implemented for panels of type custom
 // as the sdk implementation does not support it.
