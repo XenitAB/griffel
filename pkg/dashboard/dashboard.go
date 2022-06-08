@@ -22,14 +22,14 @@ func Patch(fs afero.Fs, cfg *config.Config) error {
 			Datasource: util.StringPointer("${DS_PROMETHEUS}"),
 			Type:       "query",
 			Query:      template.Query,
-      Options: []sdk.Option{},
-      Current: sdk.Current{
-        Text: &sdk.StringSliceString{
-          Value: []string{""},
-          Valid: true,
-        },
-        Value: "",
-      },
+			Options:    []sdk.Option{},
+			Current: sdk.Current{
+				Text: &sdk.StringSliceString{
+					Value: []string{""},
+					Valid: true,
+				},
+				Value: "",
+			},
 		})
 	}
 
@@ -47,14 +47,14 @@ func Patch(fs afero.Fs, cfg *config.Config) error {
 			Regex:   cfg.Patch.Datasource.Regex,
 			Hide:    hide,
 			Refresh: sdk.BoolInt{Value: util.Int64Pointer(1)},
-      Options: []sdk.Option{},
-      Current: sdk.Current{
-        Text: &sdk.StringSliceString{
-          Value: []string{""},
-          Valid: true,
-        },
-        Value: "",
-      },
+			Options: []sdk.Option{},
+			Current: sdk.Current{
+				Text: &sdk.StringSliceString{
+					Value: []string{""},
+					Valid: true,
+				},
+				Value: "",
+			},
 		}
 	}
 

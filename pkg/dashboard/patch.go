@@ -21,6 +21,11 @@ func patchTemplating(templating sdk.Templating, tplVars []sdk.TemplateVar, datas
 	// Append exsting template variables with additional label filters
 	// nolint:gocritic // can't affect SDK
 	for _, template := range templating.List {
+		// Set values that cant be nil
+		if template.Options == nil {
+			template.Options = []sdk.Option{}
+		}
+
 		// Remove datasource if datasource override is set
 		if template.Type == "datasource" && datasource != nil {
 			continue
@@ -30,6 +35,7 @@ func patchTemplating(templating sdk.Templating, tplVars []sdk.TemplateVar, datas
 			newList = append(newList, template)
 			continue
 		}
+
 		expr, err := util.AppendVariables(template.Query.(string), tplVars)
 		if err != nil {
 			return sdk.Templating{}, err
