@@ -66,14 +66,13 @@ func Patch(fs afero.Fs, cfg *config.Config) error {
 		if err != nil {
 			return err
 		}
-
+		board.Editable = dash.Editable
 		if dash.Patch.Title != "" {
 			board.Title = dash.Patch.Title
 		}
 		if len(dash.Patch.Tags) > 0 {
 			board.Tags = dash.Patch.Tags
 		}
-
 		board.Templating, err = patchTemplating(board.Templating, tplVars, datasource)
 		if err != nil {
 			return err
