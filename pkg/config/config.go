@@ -36,6 +36,7 @@ type Dashboard struct {
 	Source      DashboardSource      `yaml:"source"`
 	Destination DashboardDestination `yaml:"destination"`
 	Patch       DashboardPatch       `yaml:"patch"`
+	Editable    bool                 `yaml:"editable"`
 }
 
 type Config struct {
