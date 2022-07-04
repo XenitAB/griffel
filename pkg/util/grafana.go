@@ -74,7 +74,34 @@ func OverrideTarget(panel *sdk.Panel, targets []sdk.Target) error {
 	return nil
 }
 
-func AppendVariables(exprStr string, tplVars []sdk.TemplateVar) (string, error) {
+func AppendVariables(query interface{}, tplVars []sdk.TemplateVar) (interface{}, error) {
+	// Query in string format
+	if queryStr, ok := query.(string); ok {
+		queryStr, err := appendVariables(queryStr, tplVars)
+		if err != nil {
+			return nil, err
+		}
+		return queryStr, nil
+	}
+
+	// Query in map format
+	if queryMap, ok := query.(map[string]interface{}); ok {
+		queryStr, ok := queryMap["query"]
+		if !ok {
+			return nil, fmt.Errorf("query map does not contain expected key")
+		}
+		queryStr, err := appendVariables(queryStr.(string), tplVars)
+		if err != nil {
+			return nil, err
+		}
+		queryMap["query"] = queryStr
+		return queryMap, nil
+	}
+
+	return nil, fmt.Errorf("unknown query type")
+}
+
+func appendVariables(exprStr string, tplVars []sdk.TemplateVar) (string, error) {
 	if exprStr == "" {
 		return "", errors.New("expression string cannot be empty")
 	}

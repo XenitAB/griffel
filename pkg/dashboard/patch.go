@@ -1,6 +1,8 @@
 package dashboard
 
 import (
+	"fmt"
+
 	"github.com/grafana-tools/sdk"
 
 	"github.com/xenitab/griffel/pkg/util"
@@ -36,11 +38,13 @@ func patchTemplating(templating sdk.Templating, tplVars []sdk.TemplateVar, datas
 			continue
 		}
 
-		expr, err := util.AppendVariables(template.Query.(string), tplVars)
+		// Append additional variable filters to query
+		query, err := util.AppendVariables(template.Query, tplVars)
 		if err != nil {
-			return sdk.Templating{}, err
+			return sdk.Templating{}, fmt.Errorf("could not template Grafana query: %w", err)
 		}
-		template.Query = expr
+		template.Query = query
+
 		newList = append(newList, template)
 	}
 
@@ -101,7 +105,11 @@ func patchPanels(panels []*sdk.Panel, tplVars []sdk.TemplateVar) ([]*sdk.Panel, 
 			if err != nil {
 				return nil, err
 			}
-			target.Expr = expr
+			exprStr, ok := expr.(string)
+			if !ok {
+				return nil, fmt.Errorf("unexpected expression return type")
+			}
+			target.Expr = exprStr
 			newTargets = append(newTargets, target)
 		}
 
