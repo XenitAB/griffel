@@ -90,6 +90,5 @@ func Patch(fs afero.Fs, cfg *config.Config) error {
 			return err
 		}
 	}
-
 	return nil
 }
