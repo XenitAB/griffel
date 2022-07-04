@@ -2,6 +2,8 @@ module github.com/xenitab/griffel
 
 go 1.18
 
+replace github.com/grafana-tools/sdk => github.com/phillebaba/grafana-tools-sdk v0.0.0-20220704095142-f17a50880ed1
+
 require (
 	github.com/VictoriaMetrics/metricsql v0.44.0
 	github.com/grafana-operator/grafana-operator/v4 v4.4.1
