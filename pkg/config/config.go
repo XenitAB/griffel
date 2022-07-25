@@ -7,6 +7,8 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+// Global Dashboard Patch
+
 type DashboardDatasource struct {
 	Name  string `yaml:"name"`
 	Label string `yaml:"label"`
@@ -25,24 +27,7 @@ type GlobalDashboardPatch struct {
 	Datasource *DashboardDatasource `yaml:"datasource"`
 }
 
-type DashboardPatch struct {
-	Title string   `yaml:"title"`
-	Tags  []string `yaml:"tags"`
-}
-
-type Dashboard struct {
-	Name        string               `yaml:"name"`
-	Format      string               `yaml:"format"`
-	Source      DashboardSource      `yaml:"source"`
-	Destination DashboardDestination `yaml:"destination"`
-	Patch       DashboardPatch       `yaml:"patch"`
-	Editable    bool                 `yaml:"editable"`
-}
-
-type Config struct {
-	Dashboards []Dashboard          `yaml:"dashboards"`
-	Patch      GlobalDashboardPatch `yaml:"patch"`
-}
+// Source
 
 type SourceKind string
 
@@ -52,10 +37,12 @@ const (
 	SourceKindPath        SourceKind = "Path"
 )
 
-type DashboardSource struct {
+type Source struct {
 	Kind  SourceKind `yaml:"kind"`
 	Value string     `yaml:"value"`
 }
+
+// Output
 
 type OutputFormat string
 
@@ -64,16 +51,46 @@ const (
 	OutputFormatKubernetes OutputFormat = "Kubernetes"
 )
 
-type DashboardDestination struct {
+type Destination struct {
 	Format    OutputFormat `yaml:"format"`
 	Directory string       `yaml:"directory"`
+}
+
+// Dashboard
+
+type DashboardPatch struct {
+	Title    string   `yaml:"title"`
+	Tags     []string `yaml:"tags"`
+	Editable bool     `yaml:"editable"`
+}
+
+type Dashboard struct {
+	Name        string         `yaml:"name"`
+	Source      Source         `yaml:"source"`
+	Destination Destination    `yaml:"destination"`
+	Patch       DashboardPatch `yaml:"patch"`
+}
+
+// Rule
+
+type Rule struct {
+	Name        string      `yaml:"name"`
+	Source      Source      `yaml:"source"`
+	Destination Destination `yaml:"destination"`
+}
+
+// Root
+
+type Config struct {
+	Patch      GlobalDashboardPatch `yaml:"patch"`
+	Dashboards []Dashboard          `yaml:"dashboards"`
+	Rules      []Rule               `yaml:"rules"`
 }
 
 func ParseConfig(path string) (*Config, error) {
 	if path == "" {
 		return nil, errors.New("config path cannot be empty")
 	}
-
 	b, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err

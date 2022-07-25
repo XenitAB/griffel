@@ -8,6 +8,7 @@ require (
 	github.com/VictoriaMetrics/metricsql v0.44.0
 	github.com/grafana-operator/grafana-operator/v4 v4.4.1
 	github.com/grafana-tools/sdk v0.0.0-20220611090550-5c2631ac7ee4
+	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.57.0
 	github.com/spf13/afero v1.8.2
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.7.0

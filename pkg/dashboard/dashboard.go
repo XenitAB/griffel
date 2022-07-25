@@ -66,7 +66,7 @@ func Patch(fs afero.Fs, cfg *config.Config) error {
 		if err != nil {
 			return err
 		}
-		board.Editable = dash.Editable
+		board.Editable = dash.Patch.Editable
 		if dash.Patch.Title != "" {
 			board.Title = dash.Patch.Title
 		}
