@@ -4,25 +4,21 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/alexflint/go-arg"
 	"github.com/spf13/afero"
-	flag "github.com/spf13/pflag"
 
 	"github.com/xenitab/griffel/pkg/config"
 	"github.com/xenitab/griffel/pkg/dashboard"
 )
 
-var (
-	configPath string
-)
-
-func init() {
-	flag.StringVar(&configPath, "config-path", "", "path to configuration file.")
-	flag.Parse()
-}
-
 func main() {
+	var args struct {
+		ConfigPath string `arg:"--config-path,required"`
+	}
+	arg.MustParse(&args)
+
 	fs := afero.NewOsFs()
-	cfg, err := config.ParseConfig(configPath)
+	cfg, err := config.ParseConfig(args.ConfigPath)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)

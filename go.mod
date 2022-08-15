@@ -4,10 +4,10 @@ go 1.19
 
 require (
 	github.com/VictoriaMetrics/metricsql v0.44.1
+	github.com/alexflint/go-arg v1.4.3
 	github.com/grafana-operator/grafana-operator/v4 v4.5.1
 	github.com/grafana-tools/sdk v0.0.0-20220718141209-53350f3fd4b9
 	github.com/spf13/afero v1.9.2
-	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.8.0
 	gopkg.in/yaml.v2 v2.4.0
 	k8s.io/apiextensions-apiserver v0.24.3
@@ -16,6 +16,7 @@ require (
 
 require (
 	github.com/VictoriaMetrics/metrics v1.22.1 // indirect
+	github.com/alexflint/go-scalar v1.1.0 // indirect
 	github.com/blang/semver v3.5.1+incompatible // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/go-logr/logr v1.2.3 // indirect
