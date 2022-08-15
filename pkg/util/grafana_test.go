@@ -31,10 +31,10 @@ func TestAppendFilterBasic(t *testing.T) {
 			Label: "Foo",
 		},
 	}
-	// nolint:lll // ignore
+	//nolint:lll // ignore
 	exprString, err := AppendVariables("sum(gotk_reconcile_condition{namespace=~\"$namespace\", type=\"Ready\", status=\"False\", kind=~\"Kustomization|HelmRelease\"})", tplVars)
 	require.NoError(t, err)
-	// nolint:lll // ignore
+	//nolint:lll // ignore
 	require.Equal(t, "sum(gotk_reconcile_condition{namespace=~\"$namespace\", type=\"Ready\", status=\"False\", kind=~\"Kustomization|HelmRelease\", foo=~\"$foo\"})", exprString)
 }
 
@@ -57,15 +57,15 @@ func TestAppendFilterWithVariables(t *testing.T) {
 			Label: "Foo",
 		},
 	}
-	// nolint:lll // ignore
+	//nolint:lll // ignore
 	exprString, err := AppendVariables("sort_desc(sum(irate(container_network_transmit_packets_dropped_total{cluster=\"$cluster\",namespace=~\".+\"}[$__interval:$resolution])) by (namespace))", tplVars)
 	require.NoError(t, err)
-	// nolint:lll // ignore
+	//nolint:lll // ignore
 	require.Equal(t, "sort_desc(sum(irate(container_network_transmit_packets_dropped_total{cluster=\"$cluster\", namespace=~\".+\", foo=~\"$foo\"}[$__interval:$resolution])) by (namespace))", exprString)
 }
 
 func TestReplaceInterval(t *testing.T) {
-	// nolint:lll // ignore
+	//nolint:lll // ignore
 	result, cache := replaceInterval("container_network_transmit_packets_dropped_total{cluster=\"$cluster\",namespace=~\".+\"}[$__interval:$resolution]")
 	require.NotEmpty(t, cache)
 	require.NotContains(t, result, "$__interval")
@@ -79,6 +79,6 @@ func TestUnReplaceInterval(t *testing.T) {
 	}
 
 	result := unReplaceInterval("container_network_transmit_packets_dropped_total{cluster=\"$cluster\",namespace=~\".+\"}[123m:456m]", cache)
-	// nolint:lll // ignore
+	//nolint:lll // ignore
 	require.Equal(t, "container_network_transmit_packets_dropped_total{cluster=\"$cluster\",namespace=~\".+\"}[$__interval:$resolution]", result)
 }

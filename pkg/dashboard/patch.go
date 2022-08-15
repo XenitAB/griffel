@@ -21,7 +21,7 @@ func patchTemplating(templating sdk.Templating, tplVars []sdk.TemplateVar, datas
 	newList = append(newList, tplVars...)
 
 	// Append exsting template variables with additional label filters
-	// nolint:gocritic // can't affect SDK
+	//nolint:gocritic // can't affect SDK
 	for _, template := range templating.List {
 		// Set values that cant be nil
 		if template.Options == nil {
@@ -67,7 +67,8 @@ func patchRows(rows []*sdk.Row, tplVars []sdk.TemplateVar) ([]*sdk.Row, error) {
 }
 
 // patchPanels patches all queries in the list of panels and adds label filters to all of the queries.
-// nolint:gocognit // skip
+//
+//nolint:gocognit // skip
 func patchPanels(panels []*sdk.Panel, tplVars []sdk.TemplateVar) ([]*sdk.Panel, error) {
 	for i, panel := range panels {
 		// Override datasource for panel
@@ -95,7 +96,7 @@ func patchPanels(panels []*sdk.Panel, tplVars []sdk.TemplateVar) ([]*sdk.Panel, 
 
 		// Append variables to all of the targets
 		newTargets := []sdk.Target{}
-		// nolint:gocritic // can't affect SDK
+		//nolint:gocritic // can't affect SDK
 		for _, target := range *targets {
 			// Expr is only set for Prometheus targets
 			if target.Expr == "" {

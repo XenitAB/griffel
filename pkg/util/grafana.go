@@ -41,7 +41,7 @@ func GetTargets(panel *sdk.Panel) (*[]sdk.Target, error) {
 // This has to be implemented per panel type as the sdk method does not
 // work properly for all the different types.
 func OverrideTarget(panel *sdk.Panel, targets []sdk.Target) error {
-	// nolint:exhaustive // only want to override panels with targets
+	//nolint:exhaustive // only want to override panels with targets
 	switch panel.OfType {
 	case sdk.CustomType:
 		b, err := json.Marshal(targets)
@@ -112,7 +112,7 @@ func appendVariables(exprStr string, tplVars []sdk.TemplateVar) (string, error) 
 	}
 
 	labelFilters := []metricsql.LabelFilter{}
-	// nolint:gocritic // can't affect SDK
+	//nolint:gocritic // can't affect SDK
 	for _, tplVar := range tplVars {
 		labelFilters = append(labelFilters, metricsql.LabelFilter{
 			Label:    tplVar.Name, // no this is not wrong
@@ -173,7 +173,7 @@ func replaceInterval(expr string) (string, map[string]string) {
 	cache := map[string]string{}
 	result := expr
 	for _, v := range variables {
-		// nolint:gosec // security is not an issue for this as the value is temporary
+		//nolint:gosec // security is not an issue for this as the value is temporary
 		duration := fmt.Sprintf("%vm", rand.Int())
 		cache[duration] = v
 		result = strings.ReplaceAll(result, v, duration)

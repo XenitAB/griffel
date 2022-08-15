@@ -12,7 +12,7 @@ import (
 
 func Patch(fs afero.Fs, cfg *config.Config) error {
 	tplVars := []sdk.TemplateVar{}
-	// nolint:gocritic // skip
+	//nolint:gocritic // skip
 	for _, template := range cfg.Patch.Variables {
 		tplVars = append(tplVars, sdk.TemplateVar{
 			Name:       template.Name,
@@ -58,7 +58,7 @@ func Patch(fs afero.Fs, cfg *config.Config) error {
 		}
 	}
 
-	// nolint:gocritic // skip
+	//nolint:gocritic // skip
 	for _, dash := range cfg.Dashboards {
 		fmt.Println(dash.Name)
 
